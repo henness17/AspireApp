@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/henness17/AspireApp/issues"
   },
-  "homepage": "https://github.com/henness17/AspireApp#readme"
+  "homepage": "https://github.com/henness17/AspireApp#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
 }
