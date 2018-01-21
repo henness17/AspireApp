@@ -1,0 +1,19 @@
+<head>
+</head>
+<body>
+	<% if (!user) { %>
+		<center>
+		<div id="page">
+			<a href="/login/facebook">
+				<button type="button">Connect With Facebook</button>
+			</a>
+		</div>
+		</center>
+	<% } else {%>
+		<center>
+			You're logged in, <%= user.displayName %>!<br>
+			<a href="/">Go Home</a><br>
+			<a href="/logout/facebook">Logout</a>
+		</center>
+	<% } %>
+</body>
