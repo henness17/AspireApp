@@ -6,9 +6,17 @@ module.exports = function(app){
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false}));
 
+  // JSON data example
+  var fs = require("fs");
+  console.log("\n *START* \n");
+  var content = fs.readFileSync("transportation.json");
+  var json = JSON.parse(content);
+  console.log("Output Content : \n"+ json[0].Manufacturer);
+  console.log("\n *EXIT* \n");
+
   // Application root route page, aspireapp.herokuapp.com/
   app.get('/', loggedIn, function(req, res){
-    res.send('Hello World!');
+    res.render('home', {user: req.user});
   });
 
   app.get('/login', function(req, res){
@@ -19,8 +27,8 @@ module.exports = function(app){
     res.render('login', {user: req.user});
   });
 
-  app.get('/settings', function(req, res){
-    res.render('settings', {user: req.user});
+  app.get('/settings', loggedIn, function(req, res){
+    res.render('settings', {user: req.user, json: json});
   });
 
   function loggedIn(req, res, next) {
