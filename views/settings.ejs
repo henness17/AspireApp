@@ -1,0 +1,54 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+Hello, <%= user.displayName %>!
+<form action="/action" id="settingsform">
+Username:<input type="text" name="fname"><br>
+Year:
+<select name="yearlist" form="settingsform">
+	<% var year = 1998 %>
+	<% for(var i = 0; i < 21; i++) { %>
+		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
+	<% } %>
+</select><br>
+
+Make:
+<select name="makelist" form="settingsform">
+	<% var year = 1998 %>
+	<% for(var i = 0; i < 21; i++) { %>
+		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
+	<% } %>
+</select><br>
+
+Model:
+<select name="modellist" form="settingsform">
+	<% var year = 1998 %>
+	<% for(var i = 0; i < 21; i++) { %>
+		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
+	<% } %>
+</select><br>
+
+Transmission:
+<select name="transmissionlist" form="settingsform">
+	<% var year = 1998 %>
+	<% for(var i = 0; i < 21; i++) { %>
+		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
+	<% } %>
+</select><br>
+
+CO2/mile: ... <br>
+
+Secondary Transportation:
+<select name="secondarylist" form="settingsform">
+	<% var year = 1998 %>
+	<% for(var i = 0; i < 21; i++) { %>
+		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
+	<% } %>
+</select><br>
+  <input type="submit">
+</form>
+</body>
+</html>
