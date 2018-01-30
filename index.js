@@ -1,3 +1,4 @@
+const main = async () => {
 // index.js
 var express = require('express');
 var app = express();
@@ -18,7 +19,10 @@ if(process.env.PASSPORT_CLIENT_ID == undefined){
 // The passport module Facebook strategy routes
 require('./routes/passport.js')(app);
 require('./routes/pages.js')(app);
+require('./routes/postgres.js')(app);
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
+}
+main();

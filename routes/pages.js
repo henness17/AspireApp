@@ -1,6 +1,7 @@
 module.exports = function(app){
 	// routes must include passport
 	require('./passport.js')(app);
+  var postgres = require('./postgres.js');
   var bodyParser = require('body-parser'),
   path = require('path');
   app.use(bodyParser.json());
@@ -31,12 +32,18 @@ module.exports = function(app){
     res.render('settings', {user: req.user, json: json});
   });
 
+  // This forwards the request route to postgres.js, and then returns when the postgres.js route calls callback()
+  app.get('/get-user-by-id', function(req, res){
+    postgres.GetUserById(1, callback);
+    function callback(){
+      res.redirect('/');
+    }
+  });
+
   function loggedIn(req, res, next) {
     if (req.user) {
-      console.log(req.user);
       next();
     } else {
-      console.log(req.user);
       res.redirect('/login');
     }
   }
