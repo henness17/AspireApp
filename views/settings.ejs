@@ -12,6 +12,11 @@
 			// to convert the select lists to searchable drop down lists
 			$('.filteredSelect').select2();			
 
+			// Adds a dummy option indicating the user to select a year
+			$("select[name=yearlist]")
+				.append($('<option></option>')
+				.html("Please select a year")
+				);
 
 			for (var i=1998;i<2018;i++)
 			{ 
@@ -19,35 +24,66 @@
 					.append($('<option></option>')
 					.val(i)
 					.html(i)
-				);
+					);
 			}
 
-			var filteredYear;
-
+			var filteredY;
 			$("select[name=yearlist]").change(function(){
+				// Remove all the options from each of the lists
 				$("select[name=makelist] option").remove();
-
-				var optionSelected = $("option:selected", this);
+				$("select[name=modellist] option").remove();
+				$("select[name=transmissionlist] option").remove();
+				$("select[name=aspirationlist] option").remove();
+				$("select[name=enginelist] option").remove();
 				
-				filteredYear = $(data).filter(function (i,n){
-					if (n.Year == optionSelected.text()){
+				// Adds a dummy option indicating the user to select a make
+				$("select[name=makelist]")
+				.append($('<option></option>')
+				.html("Please select a Make")
+				);
+
+				var selectedTxt = $("option:selected", this).text();
+				filteredY = $(data).filter(function (i,n){
+					if (n.Year == selectedTxt){
 						$("select[name=makelist]")
 							.append($('<option></option>')
 							.val(n.Manufacturer)
 							.html(n.Manufacturer)
-						);
+							);
 						return n;
 					}
-				
 				});
+
+				// Removes duplicate options in the select
+				var usedNames = {};
+				$("select[name=makelist] option").each(function () {
+					if(usedNames[this.text]) {
+						$(this).remove();
+					} else {
+						usedNames[this.text] = this.value;
+					}
+				});
+
 			});
 			
-			var filteredYearMake;
+			var filteredYMa;
 			$("select[name=makelist]").change(function(){
+				// Remove all options in the rest of the select lists
 				$("select[name=modellist] option").remove();
-				var optionSelected = $("option:selected", this);
-				filteredYearMake = $(filteredYear).filter(function (i,n){
-					if (n.Manufacturer == optionSelected.text()){
+				$("select[name=transmissionlist] option").remove();
+				$("select[name=aspirationlist] option").remove();
+				$("select[name=enginelist] option").remove();
+				
+				// Adds a dummy option indicating the user to select a Model
+				$("select[name=modellist]")
+					.append($('<option></option>')
+					.html("Please select a Model")
+					);
+
+
+				var selectedVal = $("option:selected", this).val();
+				filteredYMa = $(filteredY).filter(function (i,n){
+					if (n.Manufacturer == selectedVal){
 						$("select[name=modellist]")
 							.append($('<option></option>')
 							.val(n.Model)
@@ -58,33 +94,72 @@
 					}
 				
 				});
+
+				// Filter function to remove duplicate values in the select list
+				var usedNames = {};
+				$("select[name=modellist] option").each(function () {
+					if(usedNames[this.text]) {
+						$(this).remove();
+					} else {
+						usedNames[this.text] = this.value;
+					}
+				});
 			});
 
-			var filteredYearMakeModel;
+			var filteredYMaMo;
 			$("select[name=modellist]").change(function(){
+				// Remove all options in the remaining lists
 				$("select[name=transmissionlist] option").remove();
-				var optionSelected = $("option:selected", this);
-				filteredYearMakeModel = $(filteredYearMake).filter(function (i,n){
-					if (n.Model == optionSelected.text()){
+				$("select[name=aspirationlist] option").remove();
+				$("select[name=enginelist] option").remove();
+
+				// Adds a dummy option indicating the user to select a transmission
+				$("select[name=transmissionlist]")
+					.append($('<option></option>')
+					.html("Please select a Transmission")
+					);
+
+				
+				var selectedVal = $("option:selected", this).val();
+				filteredYMaMo = $(filteredYMa).filter(function (i,n){
+					if (n.Model == selectedVal){
 						$("select[name=transmissionlist]")
 							.append($('<option></option>')
 							.val(n.Transmission)
 							.html(n.Transmission)
 						);
-						
 						return n;						
 					}
 				
 				});
+				// Removes duplicate options within the select list
+				var usedNames = {};
+				$("select[name=transmissionlist] option").each(function () {
+					if(usedNames[this.text]) {
+						$(this).remove();
+					} else {
+						usedNames[this.text] = this.value;
+					}
+				});
+				
 			});
 
 			
-			var filteredYearMakeModelTransmission;
+			var filteredYMaMoT;
 			$("select[name=transmissionlist]").change(function(){
+				// Remove all the options in the remaining lists
 				$("select[name=aspirationlist] option").remove();
-				var optionSelected = $("option:selected", this);
-				filteredYearMakeModelTransmission = $(filteredYearMakeModel).filter(function (i,n){
-					if (n.Transmission == optionSelected.text()){
+				$("select[name=enginelist] option").remove();
+
+				// Adds a dummy option indicating the user to select an Aspiration
+				$("select[name=aspirationlist]")
+					.append($('<option></option>')
+					.html("Please select a Aspiration")
+					);
+
+				var selectedVal = $("option:selected", this).val();
+				filteredYMaMoT = $(filteredYMaMo).filter(function (i,n){
+					if (n.Transmission == selectedVal){
 						$("select[name=aspirationlist]")
 							.append($('<option></option>')
 							.val(n.Aspiration)
@@ -94,26 +169,65 @@
 					}
 				
 				});
-				if(filteredYearMakeModelTransmission.length == 1){
-				}
-			});
 
-			var filteredYearMakeModelTransmissionAspiration;
-			$("select[name=aspirationlist]").change(function(){
-				var optionSelected = $("option:selected", this);
-				filteredYearMakeModelTransmissionAspiration = $(filteredYearMakeModelTransmission).filter(function (i,n){
-					if(n.Aspiration == optionSelected.text()){
-						console.log("here");
-						return n;
-					}						
+				
+				// Filter removes duplicate options in the select statement
+				var usedNames = {};
+				$("select[name=aspirationlist] option").each(function () {
+					$("select[name=enginelist] option").remove();
+
+					if(usedNames[this.text]) {
+						$(this).remove();
+					} else {
+						usedNames[this.text] = this.value;
+					}
 				});
-				console.log(filteredYearMakeModelTransmissionAspiration)
 			});
 
-			// Removes duplicates from select list
-			$(".filteredSelect option").val(function(idx, val) {
-				$(this).siblings("[value='"+ val +"']").remove();
+			var filteredYMaMoTA;
+			$("select[name=aspirationlist]").change(function(){
+				// Adds a dummy option indicating the user to select a year
+				$("select[name=enginelist]")
+					.append($('<option></option>')
+					.html("Please select an engine")
+					);
+
+				
+				var selectedVal = $("option:selected", this).val();
+				filteredYMaMoTA = $(filteredYMaMoT).filter(function (i,n){
+					if (n.Aspiration == selectedVal){
+						$("select[name=enginelist]")
+							.append($('<option></option>')
+							.val(n.Engine)
+							.html(n.Engine)
+						);
+						return n;						
+					}
+				});
+
+				// Filter that removes possible duplicate options from the select list
+				var usedNames = {};
+				$("select[name=enginelist] option").each(function () {
+					if(usedNames[this.text]) {
+						$(this).remove();
+					} else {
+						usedNames[this.text] = this.value;
+					}
+				});
 			});
+
+			var filteredYMaMoTAE
+			$("select[name=enginelist]").change(function(){
+				var selectedVal = $("option:selected", this).val();
+				filteredYMaMoTAE = $(filteredYMaMoTA).filter(function (i,n){
+					if (n.Engine == selectedVal){
+						return n;						
+					}
+				});
+
+				alert("here is your fuel output: " + filteredYMaMoTAE[0].Fuel);
+			});
+
 
 		});
 
@@ -133,6 +247,7 @@ Username:<input type="text" name="fname"><br>
 		<th>Model</th>
 		<th>Transmission</th>
 		<th>Aspiration</th>
+		<th>Engine</th>
 	</tr>
 	<td>
 		1
@@ -151,6 +266,9 @@ Username:<input type="text" name="fname"><br>
 	</td>
 	<td>
 		<select class="filteredSelect" name="aspirationlist" form="settingsform" style="width:200px"></select>		
+	</td>
+	<td>
+		<select class="filteredSelect" name="enginelist" form="settingsform" style="width:200px"></select>		
 	</td>
 	<tfoot><tr><td><input id="addCar" type="button" value="Add car"></td></tr></tfoot>
 </table> <br>
