@@ -3,52 +3,157 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<% include partials/bootstrap %>
-	<script>
+
+	<script  type="text/javascript">
 		// Check if the page is loaded and ready
 		$(document).ready(function() {
+			var data = <%- JSON.stringify(json); %>;
 			// Currently selects each of the elements with the filterSelect class name and uses jquery plug in Select2
 			// to convert the select lists to searchable drop down lists
-			$('.filteredSelect').select2();
+			$('.filteredSelect').select2();			
+
+
+			for (var i=1998;i<2018;i++)
+			{ 
+				$("select[name=yearlist]")
+					.append($('<option></option>')
+					.val(i)
+					.html(i)
+				);
+			}
+
+			var filteredYear;
+
+			$("select[name=yearlist]").change(function(){
+				$("select[name=makelist] option").remove();
+
+				var optionSelected = $("option:selected", this);
+				
+				filteredYear = $(data).filter(function (i,n){
+					if (n.Year == optionSelected.text()){
+						$("select[name=makelist]")
+							.append($('<option></option>')
+							.val(n.Manufacturer)
+							.html(n.Manufacturer)
+						);
+						return n;
+					}
+				
+				});
+			});
+			
+			var filteredYearMake;
+			$("select[name=makelist]").change(function(){
+				$("select[name=modellist] option").remove();
+				var optionSelected = $("option:selected", this);
+				filteredYearMake = $(filteredYear).filter(function (i,n){
+					if (n.Manufacturer == optionSelected.text()){
+						$("select[name=modellist]")
+							.append($('<option></option>')
+							.val(n.Model)
+							.html(n.Model)
+						);
+						
+						return n;						
+					}
+				
+				});
+			});
+
+			var filteredYearMakeModel;
+			$("select[name=modellist]").change(function(){
+				$("select[name=transmissionlist] option").remove();
+				var optionSelected = $("option:selected", this);
+				filteredYearMakeModel = $(filteredYearMake).filter(function (i,n){
+					if (n.Model == optionSelected.text()){
+						$("select[name=transmissionlist]")
+							.append($('<option></option>')
+							.val(n.Transmission)
+							.html(n.Transmission)
+						);
+						
+						return n;						
+					}
+				
+				});
+			});
+
+			
+			var filteredYearMakeModelTransmission;
+			$("select[name=transmissionlist]").change(function(){
+				$("select[name=aspirationlist] option").remove();
+				var optionSelected = $("option:selected", this);
+				filteredYearMakeModelTransmission = $(filteredYearMakeModel).filter(function (i,n){
+					if (n.Transmission == optionSelected.text()){
+						$("select[name=aspirationlist]")
+							.append($('<option></option>')
+							.val(n.Aspiration)
+							.html(n.Aspiration)
+						);
+						return n;						
+					}
+				
+				});
+				if(filteredYearMakeModelTransmission.length == 1){
+				}
+			});
+
+			var filteredYearMakeModelTransmissionAspiration;
+			$("select[name=aspirationlist]").change(function(){
+				var optionSelected = $("option:selected", this);
+				filteredYearMakeModelTransmissionAspiration = $(filteredYearMakeModelTransmission).filter(function (i,n){
+					if(n.Aspiration == optionSelected.text()){
+						console.log("here");
+						return n;
+					}						
+				});
+				console.log(filteredYearMakeModelTransmissionAspiration)
+			});
+
+			// Removes duplicates from select list
+			$(".filteredSelect option").val(function(idx, val) {
+				$(this).siblings("[value='"+ val +"']").remove();
+			});
+
 		});
-		
+
 	</script>
 </head>
 
 <body>
 Hello, <%= user.displayName %>! From the JSON, we have <%= json[0].Manufacturer %>.
+
 <form action="/action" id="settingsform">
 Username:<input type="text" name="fname"><br>
-Year:
-<select class="filteredSelect" name="yearlist" form="settingsform">
-	<% var year = 1998 %>
-	<% for(var i = 0; i < 21; i++) { %>
-		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
-	<% } %>
-</select><br>
-
-Make:
-<select class="filteredSelect" name="makelist" form="settingsform">
-	<% var year = 1998 %>
-	<% for(var i = 0; i < 21; i++) { %>
-		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
-	<% } %>
-</select><br>
-
-Model:
-<select class="filteredSelect" name="modellist" form="settingsform">
-	<% var year = 1998 %>
-	<% for(var i = 0; i < 21; i++) { %>
-		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
-	<% } %>
-</select><br>
-
-Transmission:
-<select class="filteredSelect" name="transmissionlist" form="settingsform">
-	<% var year = 1998 %>
-	<% for(var i = 0; i < 21; i++) { %>
-		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
-	<% } %>
-</select><br>
+<table id="carTable">
+	<tr>
+		<th>Car #</th>
+		<th>Year</th>
+		<th>Make</th>
+		<th>Model</th>
+		<th>Transmission</th>
+		<th>Aspiration</th>
+	</tr>
+	<td>
+		1
+	</td>
+	<td>
+		<select class="filteredSelect" name="yearlist" form="settingsform" style="width:200px"></select>
+	</td>
+	<td>
+		<select class="filteredSelect" name="makelist" form="settingsform" style="width:200px"></select>							
+	</td>
+	<td>
+		<select class="filteredSelect" name="modellist" form="settingsform" style="width:200px"></select>			
+	</td>
+	<td>
+		<select class="filteredSelect" name="transmissionlist" form="settingsform" style="width:200px"></select>		
+	</td>
+	<td>
+		<select class="filteredSelect" name="aspirationlist" form="settingsform" style="width:200px"></select>		
+	</td>
+	<tfoot><tr><td><input id="addCar" type="button" value="Add car"></td></tr></tfoot>
+</table> <br>
 
 CO2/mile: ... <br>
 
