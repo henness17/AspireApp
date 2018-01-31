@@ -20,10 +20,9 @@ Hello, <%= user.displayName %>! From the JSON, we have <%= json[0].Manufacturer 
 Username:<input type="text" name="fname"><br>
 Year:
 <select class="filteredSelect" name="yearlist" form="settingsform">
-	<% var year = 1998 %>
-	<% for(var i = 0; i < 21; i++) { %>
-		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
-	<% } %>
+	<% json[0].forEach(function(element) { %>
+		<option value=<<%= element %>></option>
+	<% }); %>
 </select><br>
 
 Make:
