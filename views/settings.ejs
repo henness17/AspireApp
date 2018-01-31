@@ -7,7 +7,7 @@
 	<script  type="text/javascript">
 		// Check if the page is loaded and ready
 		$(document).ready(function() {
-			var data = <%- JSON.stringify(json); %>;
+			var data = <%- JSON.stringify(transportationJson); %>;
 			// Currently selects each of the elements with the filterSelect class name and uses jquery plug in Select2
 			// to convert the select lists to searchable drop down lists
 			$('.filteredSelect').select2();			
