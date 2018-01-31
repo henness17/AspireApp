@@ -9,7 +9,7 @@ module.exports = function(app){
 
   // JSON data example
   var fs = require("fs");
-  var content = fs.readFileSync("transportation.json");
+  var content = fs.readFileSync("data/transportation.json");
   var json = JSON.parse(content);
 
   // Application root route page, aspireapp.herokuapp.com/
