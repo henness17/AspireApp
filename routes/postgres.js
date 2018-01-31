@@ -19,4 +19,16 @@ module.exports = function(app){
     });
   };
   module.exports.GetUserById = GetUserById;
+
+  // This gets called by pages.js and uses callback to return
+  var SetSettings = function SetSettings(formResults, callback){
+    pg.connect(connect, function(err, client, done){
+      console.log(formResults);
+      client.query("UPDATE public.user_transportation SET year=$1 WHERE id=$2", [formResults.yearlist, 1], function(err, result){
+        done();
+        callback();
+      }); 
+    });
+  };
+  module.exports.SetSettings = SetSettings;
 };

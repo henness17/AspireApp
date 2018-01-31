@@ -36,6 +36,13 @@ module.exports = function(app){
     }
   });
 
+  app.post('/set-settings', function(req, res){
+    postgres.SetSettings(req.body, callback);
+    function callback(){
+      res.redirect('/');
+    }
+  });
+
   function loggedIn(req, res, next) {
     if (req.user) {
       next();
