@@ -25,7 +25,7 @@ module.exports = function(app){
   });
 
   app.get('/map', loggedIn, function(req, res){
-    res.render('login', {user: req.user});
+    res.render('map', {user: req.user});
   });
 
   app.get('/settings', loggedIn, function(req, res){
