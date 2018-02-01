@@ -186,7 +186,9 @@
 
 			var filteredYMaMoTA;
 			$("select[name=aspirationlist]").change(function(){
-				// Adds a dummy option indicating the user to select a year
+				$("select[name=enginelist] option").remove();
+				
+				// Adds a dummy option indicating the user to select an engine
 				$("select[name=enginelist]")
 					.append($('<option></option>')
 					.html("Please select an engine")
