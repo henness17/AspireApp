@@ -7,7 +7,7 @@
 	<script  type="text/javascript">
 		// Check if the page is loaded and ready
 		$(document).ready(function() {
-			var data = <%- JSON.stringify(json); %>;
+			var data = <%- JSON.stringify(transportationJson); %>;
 			// Currently selects each of the elements with the filterSelect class name and uses jquery plug in Select2
 			// to convert the select lists to searchable drop down lists
 			$('.filteredSelect').select2();			
@@ -218,7 +218,7 @@
 				});
 			});
 
-			var filteredYMaMoTAE
+			var filteredYMaMoTAE;
 			$("select[name=enginelist]").change(function(){
 				var selectedVal = $("option:selected", this).val();
 				filteredYMaMoTAE = $(filteredYMaMoTA).filter(function (i,n){
@@ -226,8 +226,8 @@
 						return n;						
 					}
 				});
-
-				alert("here is your fuel output: " + filteredYMaMoTAE[0].Fuel);
+				var CO2 = $('#CO');
+				CO2.text(((1/filteredYMaMoTAE[0].Fuel)*20).toFixed(2) + "lbs CO2/mile");
 			});
 
 
@@ -237,9 +237,9 @@
 </head>
 
 <body>
-Hello, <%= user.displayName %>! From the JSON, we have <%= json[0].Manufacturer %>.
+Hello, <%= user.displayName %>!
 
-<form action="/action" id="settingsform">
+<form action="/set-settings" method="post" id="settingsform">
 Username:<input type="text" name="fname"><br>
 <table id="carTable">
 	<tr>
@@ -275,7 +275,7 @@ Username:<input type="text" name="fname"><br>
 	<tfoot><tr><td><input id="addCar" type="button" value="Add car"></td></tr></tfoot>
 </table> <br>
 
-CO2/mile: ... <br>
+<p id="CO">CO2/mile: ... </p>
 
 Secondary Transportation:
 <select class="filteredSelect" name="secondarylist" form="settingsform">

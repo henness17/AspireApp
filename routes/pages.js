@@ -3,17 +3,10 @@ module.exports = function(app){
 	require('./passport.js')(app);
   var postgres = require('./postgres.js');
   var bodyParser = require('body-parser'),
-  path = require('path');
+  path = require('path'),
+  fs = require("fs");;
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false}));
-
-  // JSON data example
-  var fs = require("fs");
-  console.log("\n *START* \n");
-  var content = fs.readFileSync("transportation.json");
-  var json = JSON.parse(content);
-  console.log("Output Content : \n"+ json[0].Manufacturer);
-  console.log("\n *EXIT* \n");
 
   // Application root route page, aspireapp.herokuapp.com/
   app.get('/', loggedIn, function(req, res){
@@ -29,12 +22,22 @@ module.exports = function(app){
   });
 
   app.get('/settings', loggedIn, function(req, res){
-    res.render('settings', {user: req.user, json: json});
+    // JSON data example
+    var transportationData = fs.readFileSync("data/transportation.json");
+    var transportationJson = JSON.parse(transportationData);
+    res.render('settings', {user: req.user, transportationJson: transportationJson});
   });
 
   // This forwards the request route to postgres.js, and then returns when the postgres.js route calls callback()
   app.get('/get-user-by-id', function(req, res){
     postgres.GetUserById(1, callback);
+    function callback(){
+      res.redirect('/');
+    }
+  });
+
+  app.post('/set-settings', function(req, res){
+    postgres.SetSettings(req.body, callback);
     function callback(){
       res.redirect('/');
     }
