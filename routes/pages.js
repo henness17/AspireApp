@@ -1,5 +1,4 @@
 module.exports = function(app){
-	// routes must include passport
 	require('./passport.js')(app);
   var postgres = require('./postgres.js');
   var bodyParser = require('body-parser'),
@@ -8,8 +7,7 @@ module.exports = function(app){
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false}));
 
-  // Application root route page, aspireapp.herokuapp.com/
-  app.get('/', loggedIn, function(req, res){
+  app.get('/', isLoggedIn, isRegistered, isSettingsSet, function(req, res){
     res.render('home', {user: req.user});
   });
 
@@ -17,18 +15,16 @@ module.exports = function(app){
     res.render('login', {user: req.user});
   });
 
-  app.get('/map', loggedIn, function(req, res){
+  app.get('/map', isLoggedIn, isRegistered, isSettingsSet, function(req, res){
     res.render('map', {user: req.user});
   });
 
-  app.get('/settings', loggedIn, function(req, res){
-    // JSON data example
+  app.get('/settings', isLoggedIn, isRegistered, function(req, res){
     var transportationData = fs.readFileSync("data/transportation.json");
     var transportationJson = JSON.parse(transportationData);
     res.render('settings', {user: req.user, transportationJson: transportationJson});
   });
 
-  // This forwards the request route to postgres.js, and then returns when the postgres.js route calls callback()
   app.get('/get-user-by-id', function(req, res){
     postgres.GetUserById(1, callback);
     function callback(){
@@ -37,17 +33,42 @@ module.exports = function(app){
   });
 
   app.post('/set-settings', function(req, res){
-    postgres.SetSettings(req.body, callback);
+    postgres.SetSettings(req.user.id, req.body, callback);
     function callback(){
       res.redirect('/');
     }
   });
 
-  function loggedIn(req, res, next) {
+  function isLoggedIn(req, res, next) {
     if (req.user) {
       next();
     } else {
       res.redirect('/login');
+    }
+  }
+
+  function isRegistered(req, res, next){
+    postgres.GetUserBySocialId(req.user.id, callback);
+    function callback(result){
+      if(result.rows.length == 0){
+        postgres.PostUserBySocialId(req.user.id, callback2);
+        function callback2(){
+          next();
+        }
+      }else{
+        next();
+      }
+    }
+  }
+
+  function isSettingsSet(req, res, next){
+    postgres.GetUserSettingsBySocialId(req.user.id, callback);
+    function callback(result){
+      if(result.rows.length == 0){
+        res.redirect('/settings');
+      }else{
+        next();
+      }
     }
   }
 }

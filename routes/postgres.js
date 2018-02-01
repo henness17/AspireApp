@@ -8,7 +8,6 @@ module.exports = function(app){
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false}));
 
-  // This gets called by pages.js and uses callback to return
   var GetUserById = function GetUserById(id, callback){
     pg.connect(connect, function(err, client, done){
       client.query("SELECT * FROM public.user WHERE id=$1", [id], function(err, result){
@@ -20,14 +19,63 @@ module.exports = function(app){
   };
   module.exports.GetUserById = GetUserById;
 
-  // This gets called by pages.js and uses callback to return
-  var SetSettings = function SetSettings(formResults, callback){
+  var GetUserBySocialId = function GetUserBySocialId(socialId, callback){
     pg.connect(connect, function(err, client, done){
-      console.log(formResults);
-      client.query("UPDATE public.user_transportation SET year=$1 WHERE id=$2", [formResults.yearlist, 1], function(err, result){
+      client.query("SELECT * FROM public.user WHERE social_id=$1", [socialId], function(err, result){
+        console.log(result);
+        done();
+        callback(result);
+      }); 
+    });
+  };
+  module.exports.GetUserBySocialId = GetUserBySocialId;
+
+  var GetUserSettingsBySocialId = function GetUserSettingsBySocialId(socialId, callback){
+    pg.connect(connect, function(err, client, done){
+      client.query("SELECT * FROM public.user_transportation WHERE social_id=$1", [socialId], function(err, result){
+        done();
+        callback(result);
+      }); 
+    });
+  };
+  module.exports.GetUserSettingsBySocialId = GetUserSettingsBySocialId;
+ 
+  var PostUserBySocialId = function PostUserBySocialId(socialId, callback){
+    pg.connect(connect, function(err, client, done){
+      client.query("INSERT INTO public.user (social_id) VALUES ($1)", [socialId], function(err, result){
         done();
         callback();
       }); 
+    });
+  };
+  module.exports.PostUserBySocialId = PostUserBySocialId;
+
+  var PostUserSettingsBySocialId = function PostUserSettingsBySocialId(socialId, callback){
+    pg.connect(connect, function(err, client, done){
+      client.query("INSERT INTO public.user_transportation (social_id) VALUES ($1)", [socialId], function(err, result){
+        done();
+        callback();
+      }); 
+    });
+  };
+  module.exports.PostUserSettingsBySocialId = PostUserSettingsBySocialId;
+
+  var SetSettings = function SetSettings(socialId, formResults, callback){
+    pg.connect(connect, function(err, client, done){
+      GetUserSettingsBySocialId(socialId, callback2);
+      function callback2(result){
+        if(result.rows.length == 0){
+          PostUserSettingsBySocialId(socialId, updateSettings);
+        }else{
+          updateSettings();
+        }
+        function updateSettings(){
+          client.query("UPDATE public.user_transportation SET year=$1 WHERE social_id=$2", [formResults.yearlist, socialId], function(err, result){
+            done();
+            callback();
+          }); 
+        }
+      }
     });
   };
   module.exports.SetSettings = SetSettings;
