@@ -7,12 +7,9 @@
 	<script  type="text/javascript">
 		// Check if the page is loaded and ready
 		$(document).ready(function() {
-			var data = <%- JSON.stringify(transportationJson); %>
-			var userSettings = <%- JSON.stringify(userSettingsJson); %>
-			console.log("User Settings Model: " + userSettings.rows[0].model);
 			// Currently selects each of the elements with the filterSelect class name and uses jquery plug in Select2
 			// to convert the select lists to searchable drop down lists
-			$('.filteredSelect').select2();			
+			$('.filteredSelect').select2();
 
 			// Adds a dummy option indicating the user to select a year
 			$("select[name=year]")
@@ -28,6 +25,43 @@
 					.html(i)
 					);
 			}
+			
+
+			var data = <%- JSON.stringify(transportationJson); %>
+			var userSettings = <%- JSON.stringify(userSettingsJson); %>
+
+			// Check if the user has a car saved into the database
+			if(userSettings.rows.length > 0){
+				$("select[name=year]").val(userSettings.rows[0].year);
+
+				$("select[name=make]")
+					.append($('<option></option>')
+					.val(userSettings.rows[0].make)
+					.html(userSettings.rows[0].make)
+					);
+				$("select[name=model]")
+					.append($('<option></option>')
+					.val(userSettings.rows[0].model)
+					.html(userSettings.rows[0].model)
+					);
+				$("select[name=transmission]")
+					.append($('<option></option>')
+					.val(userSettings.rows[0].transmission)
+					.html(userSettings.rows[0].transmission)
+					);
+				$("select[name=aspiration]")
+					.append($('<option></option>')
+					.val(userSettings.rows[0].aspiration)
+					.html(userSettings.rows[0].aspiration)
+					);
+				$("select[name=engine]")
+					.append($('<option></option>')
+					.val(userSettings.rows[0].engine)
+					.html(userSettings.rows[0].engine)
+					);
+			}
+
+
 
 			var filteredY;
 			$("select[name=year]").change(function(){
@@ -272,18 +306,11 @@ Username:<input type="text" name="fname"><br>
 	<td>
 		<select class="filteredSelect" name="engine" form="settingsform" style="width:200px"></select>		
 	</td>
-	<tfoot><tr><td><input id="addCar" type="button" value="Add car"></td></tr></tfoot>
+	<%#  <tfoot><tr><td><input id="addCar" type="button" value="Add car"></td></tr></tfoot>%>
 </table> <br>
 
 <p id="CO">CO2/mile: ... </p>
 
-Secondary Transportation:
-<select class="filteredSelect" name="secondarylist" form="settingsform">
-	<% var year = 1998 %>
-	<% for(var i = 0; i < 21; i++) { %>
-		<option value=<<%=" + (year + i) + "%>><%= year + i %></option>
-	<% } %>
-</select><br>
   <input type="submit">
 </form>
 </body>
