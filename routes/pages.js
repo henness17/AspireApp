@@ -22,7 +22,14 @@ module.exports = function(app){
   app.get('/settings', isLoggedIn, isRegistered, function(req, res){
     var transportationData = fs.readFileSync("data/transportation.json");
     var transportationJson = JSON.parse(transportationData);
-    res.render('settings', {user: req.user, transportationJson: transportationJson});
+    postgres.GetUserSettingsBySocialId(req.user.id, callback);
+    function callback(results){
+      var userSettingsJson = results;
+      res.render('settings', {user: req.user, 
+                              transportationJson: transportationJson,
+                              userSettingsJson: userSettingsJson}
+      );
+    }
   });
 
   app.get('/get-user-by-id', function(req, res){
@@ -31,7 +38,7 @@ module.exports = function(app){
       res.redirect('/');
     }
   });
-  
+
   app.post('/post-user-transportation-settings', function(req, res){
     postgres.PostUserTransportationSettings(req.user.id, req.body, callback);
     function callback(){

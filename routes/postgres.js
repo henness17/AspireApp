@@ -70,7 +70,8 @@ module.exports = function(app){
           updateSettings();
         }
         function updateSettings(){
-          client.query("UPDATE public.user_transportation SET year=$1,make=$2,model=$3,transmission=$4,aspiration=$5,engine=$6 WHERE social_id=$7", 
+          client.query("UPDATE public.user_transportation SET " +
+                      "year=$1,make=$2,model=$3,transmission=$4,aspiration=$5,engine=$6 WHERE social_id=$7", 
             [formResults.year,
              formResults.make,
              formResults.model,
