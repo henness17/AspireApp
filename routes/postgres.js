@@ -60,7 +60,7 @@ module.exports = function(app){
   };
   module.exports.PostUserSettingsBySocialId = PostUserSettingsBySocialId;
 
-  var SetSettings = function SetSettings(socialId, formResults, callback){
+  var PostUserTransportationSettings = function PostUserTransportationSettings(socialId, formResults, callback){
     pg.connect(connect, function(err, client, done){
       GetUserSettingsBySocialId(socialId, callback2);
       function callback2(result){
@@ -70,7 +70,14 @@ module.exports = function(app){
           updateSettings();
         }
         function updateSettings(){
-          client.query("UPDATE public.user_transportation SET year=$1 WHERE social_id=$2", [formResults.yearlist, socialId], function(err, result){
+          client.query("UPDATE public.user_transportation SET year=$1,make=$2,model=$3,transmission=$4,aspiration=$5,engine=$6 WHERE social_id=$7", 
+            [formResults.year,
+             formResults.make,
+             formResults.model,
+             formResults.transmission,
+             formResults.aspiration,
+             formResults.engine,
+             socialId], function(err, result){
             done();
             callback();
           }); 
@@ -78,5 +85,5 @@ module.exports = function(app){
       }
     });
   };
-  module.exports.SetSettings = SetSettings;
+  module.exports.PostUserTransportationSettings = PostUserTransportationSettings;
 };

@@ -31,9 +31,9 @@ module.exports = function(app){
       res.redirect('/');
     }
   });
-
-  app.post('/set-settings', function(req, res){
-    postgres.SetSettings(req.user.id, req.body, callback);
+  
+  app.post('/post-user-transportation-settings', function(req, res){
+    postgres.PostUserTransportationSettings(req.user.id, req.body, callback);
     function callback(){
       res.redirect('/');
     }
