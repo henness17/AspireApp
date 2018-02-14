@@ -38,33 +38,22 @@
     .ecost {
       visibility: hidden;
       position: absolute;
-      top: 79%;
+      top: 86%;
       left: 50%;
-      padding: .3em 0.6em;
-      -webkit-transform: translate(-50%, -50%);
-      -moz-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-      -o-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
       background-color: #4d90fe;
-      border-radius: 2px;
       text-align: center;
       z-index: 11;
-      line-height: normal;
       opacity: 0.88;
+    }
+    #popup{
+      margin: 0;
+      padding: 0;
     }
     .text  {
       color: #fff;
       font-family: Roboto;
-      font-size: 8px;
       vertical-align: middle;
-    }
-    .costitem {
-      vertical-align: middle;
-    }
-    .legendItem {
-      max-width: 20%;
-      min-width: 3%;
     }
     #cost_walking_color {
       background-color: #BC41E8;
@@ -81,6 +70,9 @@
     .flex-center-vertically {
       display: flex;
     }
+    th, td{
+      width: 10%;
+    }
   </style>
 </head>
 <body>
@@ -89,8 +81,8 @@
   <input id="destination-input" class="control" type="text"
     placeholder="Destination">
 
-  <div id="popup" class="ecost text">
-    <table>
+  <div id="popup" class="ecost text" style="width: 97.5%;">
+    <table style="font-size: 3.2vw;">
       <tr>
         <th></th>
         <th class="transitHeading, legendItem"></th>
