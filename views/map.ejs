@@ -37,17 +37,19 @@
     }
     .ecost {
       visibility: hidden;
-      padding: 5px;
-      position: fixed;
-      bottom: 5%; 
-      left: 15%;
-      margin-top: -100px;
-      margin-left: -150px;
+      position: absolute;
+      top: 83%;
+      left: 50%;
+      padding: .8em 1.2em;
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      -o-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
       background-color: #4d90fe;
       border-radius: 5px;
       text-align: center;
       z-index: 11;
-      display: inline-block;
       line-height: normal;
       opacity: 0.88;
     }
@@ -66,38 +68,6 @@
     }
     .transitTitle {
       font-weight: 400;
-    }
-    table {
-        border-collapse: collapse;
-    }
-    table tr:first-child th {
-      border-top: 0;
-    }
-    table tr:last-child td {
-      border-bottom: 0;
-    }
-    table tr td:first-child,
-    table tr th:first-child {
-      border-left: 0;
-    }
-    table tr td:last-child,
-    table tr th:last-child {
-      border-right: 0;
-    }
-    td {
-        border: 1px #80b0fe;
-        border-style: inset;
-        padding: 3px;
-    }
-    td.div {
-      padding-left: 5px;
-      padding-right: 5px;
-    }
-    th {
-        border: 1px #80b0fe;
-        border-style: inset;
-        padding: 3px;
-        border-top: none;
     }
     .costitem {
       vertical-align: middle;
@@ -119,8 +89,6 @@
     }
     .flex-center-vertically {
       display: flex;
-      justify-content: center;
-      flex-direction: column;
     }
   </style>
 </head>
@@ -130,7 +98,7 @@
   <input id="destination-input" class="control" type="text"
     placeholder="Destination">
 
-  <div id="popup" class="ecost flex-center-vertically text">
+  <div id="popup" class="ecost text">
     <table>
       <tr>
         <th></th>
@@ -186,6 +154,7 @@
       var destination_place_id = null;
       var travel_mode = google.maps.TravelMode.DRIVING;
       var map = new google.maps.Map(document.getElementById('map'), {
+        mapTypeId: 'roadmap',
         mapTypeControl: false,
         center: {lat: 45.57, lng: -122.72},
         zoom: 13
