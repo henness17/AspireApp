@@ -1,175 +1,390 @@
-<head>
-<style>
-/* Always set the map height explicitly to define the size of the div
- * element that contains the map. */
-#map {
-  height: 100%;
-}
-/* Optional: Makes the sample page fill the window. */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-.controls {
-  margin-top: 10px;
-  border: 1px solid transparent;
-  border-radius: 2px 0 0 2px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  height: 32px;
-  outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-#origin-input,
-#destination-input {
-  background-color: #fff;
-  font-family: Roboto;
-  font-size: 15px;
-  font-weight: 300;
-  margin-left: 12px;
-  padding: 0 11px 0 13px;
-  text-overflow: ellipsis;
-  width: 200px;
-}
-
-#origin-input:focus,
-#destination-input:focus {
-  border-color: #4d90fe;
-}
-
-#mode-selector {
-  color: #fff;
-  background-color: #4d90fe;
-  margin-left: 12px;
-  padding: 5px 11px 0px 11px;
-}
-
-#mode-selector label {
-  font-family: Roboto;
-  font-size: 13px;
-  font-weight: 300;
-}
-</style>
-<script>
-// This example requires the Places library. Include the libraries=places
-// parameter when you first load the API. For example:
-// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
-function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    mapTypeControl: false,
-    center: {lat: 45.5732, lng: -122.7276},
-    zoom: 13
-  });
-
-  new AutocompleteDirectionsHandler(map);
-}
-
- /**
-  * @constructor
- */
-function AutocompleteDirectionsHandler(map) {
-  this.map = map;
-  this.originPlaceId = null;
-  this.destinationPlaceId = null;
-  this.travelMode = 'WALKING';
-  var originInput = document.getElementById('origin-input');
-  var destinationInput = document.getElementById('destination-input');
-  var modeSelector = document.getElementById('mode-selector');
-  this.directionsService = new google.maps.DirectionsService;
-  this.directionsDisplay = new google.maps.DirectionsRenderer;
-  this.directionsDisplay.setMap(map);
-
-  var originAutocomplete = new google.maps.places.Autocomplete(
-      originInput, {placeIdOnly: true});
-  var destinationAutocomplete = new google.maps.places.Autocomplete(
-      destinationInput, {placeIdOnly: true});
-
-  this.setupClickListener('changemode-walking', 'WALKING');
-  this.setupClickListener('changemode-transit', 'TRANSIT');
-  this.setupClickListener('changemode-driving', 'DRIVING');
-
-  this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
-  this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
-
-  this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-  this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
-  this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
-}
-
-// Sets a listener on a radio button to change the filter type on Places
-// Autocomplete.
-AutocompleteDirectionsHandler.prototype.setupClickListener = function(id, mode) {
-  var radioButton = document.getElementById(id);
-  var me = this;
-  radioButton.addEventListener('click', function() {
-    me.travelMode = mode;
-    me.route();
-  });
-};
-
-AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(autocomplete, mode) {
-  var me = this;
-  autocomplete.bindTo('bounds', this.map);
-  autocomplete.addListener('place_changed', function() {
-    var place = autocomplete.getPlace();
-    if (!place.place_id) {
-      window.alert("Please select an option from the dropdown list.");
-      return;
-    }
-    if (mode === 'ORIG') {
-      me.originPlaceId = place.place_id;
-    } else {
-      me.destinationPlaceId = place.place_id;
-    }
-    me.route();
-  });
-
-};
-
-AutocompleteDirectionsHandler.prototype.route = function() {
-  if (!this.originPlaceId || !this.destinationPlaceId) {
-    return;
-  }
-  var me = this;
-
-  this.directionsService.route({
-    origin: {'placeId': this.originPlaceId},
-    destination: {'placeId': this.destinationPlaceId},
-    travelMode: this.travelMode
-  }, function(response, status) {
-    if (status === 'OK') {
-      me.directionsDisplay.setDirections(response);
-      console.log(response);
-    } else {
-      window.alert('Directions request failed due to ' + status);
-    }
-  });
-};
-</script>
-</head>
 <html>
-<input id="origin-input" class="controls" type="text"
-    placeholder="Enter an origin location">
+<head>
+<title>Map</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      height: 100%;
+    }
+    .control {
+      margin-top: 10px;
+      border: 1px solid transparent;
+      border-radius: 2px 0 0 2px;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      height: 32px;
+      outline: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    #origin-input,
+    #destination-input {
+      background-color: #fff;
+      font-family: Roboto;
+      font-size: 15px;
+      font-weight: 300;
+      margin-left: 10%;
+      padding: 0 11px 0 13px;
+      text-overflow: ellipsis;
+      width: 80%;
+      display: block;
+    }
+    .ecost {
+      visibility: hidden;
+      padding: 5px;
+      position: fixed;
+      bottom: 5%; 
+      left: 15%;
+      margin-top: -100px;
+      margin-left: -150px;
+      background-color: #4d90fe;
+      border-radius: 5px;
+      text-align: center;
+      z-index: 11;
+      display: inline-block;
+      line-height: normal;
+      opacity: 0.88;
+    }
+    .text  {
+      color: #fff;
+      font-family: Roboto;
+      font-size: 18px;
+      font-weight: 100;
+      vertical-align: middle;
+    }
+    .transitHeading {
+      font-weight: 400;
+      min-width: 80px;
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+    .transitTitle {
+      font-weight: 400;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    table tr:first-child th {
+      border-top: 0;
+    }
+    table tr:last-child td {
+      border-bottom: 0;
+    }
+    table tr td:first-child,
+    table tr th:first-child {
+      border-left: 0;
+    }
+    table tr td:last-child,
+    table tr th:last-child {
+      border-right: 0;
+    }
+    td {
+        border: 1px #80b0fe;
+        border-style: inset;
+        padding: 3px;
+    }
+    td.div {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+    th {
+        border: 1px #80b0fe;
+        border-style: inset;
+        padding: 3px;
+        border-top: none;
+    }
+    .costitem {
+      vertical-align: middle;
+    }
+    .legendItem {
+      width: 30px;
+    }
+    #cost_walking_color {
+      background-color: #BC41E8;
+    }
+    #cost_transit_color {
+      background-color: #0095FF;
+    }
+    #cost_driving_color {
+      background-color: #0CE819;
+    }
+    #cost_bicycling_color {
+      background-color: #FFD20D;
+    }
+    .flex-center-vertically {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <input id="origin-input" class="control" type="text"
+    placeholder="Origin">
+  <input id="destination-input" class="control" type="text"
+    placeholder="Destination">
 
-<input id="destination-input" class="controls" type="text"
-    placeholder="Enter a destination location">
+  <div id="popup" class="ecost flex-center-vertically text">
+    <table>
+      <tr>
+        <th></th>
+        <th class="transitHeading, legendItem"></th>
+        <th class="transitHeading">Time</th>
+        <th class="transitHeading">Distance</th>
+        <th class="transitHeading">Money</th>
+        <th class="transitHeading">Carbon</th>
+      </tr>
+      <tr>
+        <td class="transitTitle">Driving</td>
+        <td id="cost_driving_color" class="legendItem">    </td>
+        <td><div id="cost_driving_time" class="costitem">-</div></td>
+        <td><div id="cost_driving_distance" class="costitem">-</div></td>
+        <td><div id="cost_driving_money" class="costitem">-</div></td>
+        <td><div id="cost_driving_carbon" class="costitem">-</div></td>
+      </tr>
+      <tr>
+        <td class="transitTitle">Transit</td>
+        <td id="cost_transit_color" class="legendItem">    </td>
+        <td><div id="cost_transit_time" class="costitem">-</div></td>
+        <td><div id="cost_transit_distance" class="costitem">-</div></td>
+        <td><div id="cost_transit_money" class="costitem">-</div></td>
+        <td><div id="cost_transit_carbon" class="costitem">-</div></td>
+      </tr>
+        <td class="transitTitle">Bicycling</td>
+        <td id="cost_bicycling_color" class="legendItem">    </td>
+        <td><div id="cost_bicycling_time" class="costitem">-</div></td>
+        <td><div id="cost_bicycling_distance" class="costitem">-</div></td>
+        <td><div id="cost_bicycling_money" class="costitem">-</div></td>
+        <td><div id="cost_bicycling_carbon" class="costitem">-</div></td>
+      </tr>
+      <tr>
+        <td class="transitTitle">Walking</td>
+        <td id="cost_walking_color" class="legendItem">    </td>
+        <td><div id="cost_walking_time" class="costitem">-</div></td>
+        <td><div id="cost_walking_distance" class="costitem">-</div></td>
+        <td><div id="cost_walking_money" class="costitem">-</div></td>
+        <td><div id="cost_walking_carbon" class="costitem">-</div></td>
+      </tr>
+    </table>
+  </div>
 
-<div id="mode-selector" class="controls">
-  <input type="radio" name="type" id="changemode-walking" checked="checked">
-  <label for="changemode-walking">Walking</label>
+  <div id="map"></div>
 
-  <input type="radio" name="type" id="changemode-transit">
-  <label for="changemode-transit">Transit</label>
+  <script>
+    var directionsDisplayWalking;
+    var directionsDisplayTransit;
+    var directionsDisplayDriving;
+    var directionsDisplayBicycling;
+    function initMap() {
+      var origin_place_id = null;
+      var destination_place_id = null;
+      var travel_mode = google.maps.TravelMode.DRIVING;
+      var map = new google.maps.Map(document.getElementById('map'), {
+        mapTypeControl: false,
+        center: {lat: 45.57, lng: -122.72},
+        zoom: 13
+      });
+      var directionsService = new google.maps.DirectionsService;
+      var directionsDisplay = new google.maps.DirectionsRenderer;
+      directionsDisplay.setMap(map);
+      var origin_input = document.getElementById('origin-input');
+      var destination_input = document.getElementById('destination-input');
+      var modes = document.getElementById('mode-selector');
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(origin_input);
+      map.controls[google.maps.ControlPosition.LEFT_TOP].push(destination_input);
+      map.controls[google.maps.ControlPosition.TOP_CENTER].push(modes);
+      var origin_autocomplete = new google.maps.places.Autocomplete(origin_input);
+      origin_autocomplete.bindTo('bounds', map);
+      var destination_autocomplete = new google.maps.places.Autocomplete(destination_input);
+      destination_autocomplete.bindTo('bounds', map);
 
-  <input type="radio" name="type" id="changemode-driving">
-  <label for="changemode-driving">Driving</label>
-</div>
+      function expandViewportToFitPlace(map, place) {
+        if (place.geometry.viewport) {
+          map.fitBounds(place.geometry.viewport);
+        } else {
+          map.setCenter(place.geometry.location);
+          map.setZoom(17);
+        }
+      }
 
-<div id="map"></div>
-<!-- Replace the value of the key parameter with your own API key. -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCu3w5-56_sl6eCbmxaN5HAoSNbHWbIrE&libraries=places&callback=initMap"
-        async defer></script>
+      origin_autocomplete.addListener('place_changed', function() {
+        var place = origin_autocomplete.getPlace();
+        if (!place.geometry) {
+          window.alert("Autocomplete's returned place contains no geometry");
+          return;
+        }
+        expandViewportToFitPlace(map, place);
+        origin_place_id = place.place_id;
+        drawDirections(directionsService);
+      });
+
+      destination_autocomplete.addListener('place_changed', function() {
+        var place = destination_autocomplete.getPlace();
+        if (!place.geometry) {
+          window.alert("Autocomplete's returned place contains no geometry");
+          return;
+        }
+        expandViewportToFitPlace(map, place);
+        destination_place_id = place.place_id;
+        drawDirections(directionsService);
+      });
+
+      function drawDirections(directionsService) {
+        if (!(origin_place_id  && destination_place_id && directionsService)){
+          return; 
+        }
+        var strokeWeight = 4.5;
+        var polylineOptionsWalking = {
+              strokeColor: '#BC41E8',
+              strokeOpacity: 0.7,
+              strokeWeight: strokeWeight
+        };
+        var polylineOptionsTransit = {
+              strokeColor: '#0095FF',
+              strokeOpacity: 0.7,
+              strokeWeight: strokeWeight
+        };
+        var polylineOptionsDriving = {
+              strokeColor: '#0CE819',
+              strokeOpacity: 0.7,
+              strokeWeight: strokeWeight
+        };
+        var polylineOptionsBicycling = {
+              strokeColor: '#FFD20D',
+              strokeOpacity: 0.7,
+              strokeWeight: strokeWeight
+        };
+
+        if (directionsDisplayWalking){
+          directionsDisplayWalking.setMap(null); 
+        }
+        directionsDisplayWalking = new google.maps.DirectionsRenderer({
+          suppressMarkers: false, 
+          polylineOptions: polylineOptionsWalking
+        });
+        directionsDisplayWalking.setMap(map);
+
+        if (directionsDisplayTransit){
+          directionsDisplayTransit.setMap(null);
+        } 
+        directionsDisplayTransit = new google.maps.DirectionsRenderer({
+          suppressMarkers: false, 
+          polylineOptions: polylineOptionsTransit
+        });
+        directionsDisplayTransit.setMap(map);
+
+        if (directionsDisplayDriving){
+          directionsDisplayDriving.setMap(null);
+        }
+        directionsDisplayDriving = new google.maps.DirectionsRenderer({
+          suppressMarkers: false, 
+          polylineOptions: polylineOptionsDriving
+        });
+        directionsDisplayDriving.setMap(map);
+        
+        if (directionsDisplayBicycling){
+          directionsDisplayBicycling.setMap(null);
+        }
+        directionsDisplayBicycling = new google.maps.DirectionsRenderer({
+          suppressMarkers: false, 
+          polylineOptions: polylineOptionsBicycling
+        });
+        directionsDisplayBicycling.setMap(map);
+
+        route(origin_place_id, destination_place_id, google.maps.TravelMode.WALKING,
+              directionsService, directionsDisplayWalking);
+        route(origin_place_id, destination_place_id, google.maps.TravelMode.TRANSIT,
+              directionsService, directionsDisplayTransit);
+        route(origin_place_id, destination_place_id, google.maps.TravelMode.DRIVING,
+              directionsService, directionsDisplayDriving);
+        route(origin_place_id, destination_place_id, google.maps.TravelMode.BICYCLING,
+              directionsService, directionsDisplayBicycling);
+      };
+
+      function route(origin_place_id, destination_place_id, travel_mode, directionsService, directionsDisplay) {
+        if (!origin_place_id || !destination_place_id) {
+          return;
+        }
+        directionsService.route({
+          origin: {'placeId': origin_place_id},
+          destination: {'placeId': destination_place_id},
+          travelMode: travel_mode
+        }, function(response, status) {
+          if (status === google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+            document.getElementById("popup").style.visibility = "visible";
+            
+            populatePopup(response.routes, travel_mode);
+          } else {
+            var cells = document.getElementsByClassName('costitem');
+           for (var index in cells)
+            {
+              var entry = cells[index];
+              entry.innerHTML = '-';
+            }
+          }
+        });
+      }
+
+      function populatePopup(response, travelmode) {
+        var costPerMile, fare, time, money, distance;
+        var metersPerMile = 0.000621371;
+        costPerMile = 0.54;
+        switch(travelmode) {
+        case google.maps.TravelMode.DRIVING:
+            time = response[0].legs[0].duration.text;
+            money = parseFloat(response[0].legs[0].distance.value * metersPerMile * costPerMile).toFixed(2);
+            distance = response[0].legs[0].distance.text;
+            distance2 = response[0].legs[0].distance.value;
+            document.getElementById("cost_driving_time").innerHTML = time;
+            document.getElementById("cost_driving_money").innerHTML = "$" + money;
+            document.getElementById("cost_driving_distance").innerHTML = distance;
+            document.getElementById("cost_driving_carbon").innerHTML= (distance2 * metersPerMile * 0.411 * 2.2).toFixed(2) + " lbs" ;
+            
+            break;
+        case google.maps.TravelMode.TRANSIT:
+            if(response[0].fare === undefined)
+              fare = '-';
+            else
+              fare = response[0].fare.text;
+            time = response[0].legs[0].duration.text;
+            distance = response[0].legs[0].distance.text;
+            distance2 = response[0].legs[0].distance.value;
+            document.getElementById("cost_transit_money").innerHTML = fare;
+            document.getElementById("cost_transit_time").innerHTML = time;
+            document.getElementById("cost_transit_distance").innerHTML = distance;
+            document.getElementById("cost_transit_carbon").innerHTML = (distance2 * metersPerMile * 0.411 * 2.2 / 2.0).toFixed(2) + " lbs";
+            break;
+        case google.maps.TravelMode.BICYCLING:
+            time = response[0].legs[0].duration.text;
+            distance = response[0].legs[0].distance.text;
+            distance2 = response[0].legs[0].distance.value;
+            document.getElementById("cost_bicycling_money").innerHTML = "$0.00";
+            document.getElementById("cost_bicycling_time").innerHTML = time;
+            document.getElementById("cost_bicycling_distance").innerHTML = distance;
+            document.getElementById("cost_bicycling_carbon").innerHTML= (distance2 * metersPerMile * 0.050 * 2.2).toFixed(2) + " lbs" ;
+            
+            break;
+        case google.maps.TravelMode.WALKING:
+            time = response[0].legs[0].duration.text; // miles and mins
+            distance = response[0].legs[0].distance.text; // miles
+            distance2 = response[0].legs[0].distance.value;
+            document.getElementById("cost_walking_money").innerHTML = "$0.00";
+            document.getElementById("cost_walking_time").innerHTML = time;
+            document.getElementById("cost_walking_distance").innerHTML = distance;
+            document.getElementById("cost_walking_carbon").innerHTML= (distance2 * metersPerMile * 1.0 / 7.0).toFixed(2) + " lbs" ;
+            break;
+        }
+      }
+    }
+  </script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCu3w5-56_sl6eCbmxaN5HAoSNbHWbIrE&libraries=places&callback=initMap" async defer>
+  </script>
+</body>
 </html>
