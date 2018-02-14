@@ -67,17 +67,19 @@ module.exports = function(app){
         if(result.rows.length == 0){
           PostUserSettingsBySocialId(socialId, updateSettings);
         }else{
+          
           updateSettings();
         }
         function updateSettings(){
           client.query("UPDATE public.user_transportation SET " +
-                      "year=$1,make=$2,model=$3,transmission=$4,aspiration=$5,engine=$6 WHERE social_id=$7", 
+                      "year=$1,make=$2,model=$3,transmission=$4,engine=$5,aspiration=$6,car_output=$7 WHERE social_id=$8", 
             [formResults.year,
              formResults.make,
              formResults.model,
              formResults.transmission,
-             formResults.aspiration,
              formResults.engine,
+             formResults.aspiration,
+             formResults.car_output,
              socialId], function(err, result){
             done();
             callback();
