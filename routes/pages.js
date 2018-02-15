@@ -16,7 +16,13 @@ module.exports = function(app){
   });
 
   app.get('/map', isLoggedIn, isRegistered, isSettingsSet, function(req, res){
-    res.render('map', {user: req.user});
+    postgres.GetUserCarOutputById(req.user.id, callback);
+    function callback(results){
+      var carOutput = results;
+      res.render('map', {user: req.user,
+                         carOutput: carOutput}
+      );
+    }
   });
 
   app.get('/settings', isLoggedIn, isRegistered, function(req, res){

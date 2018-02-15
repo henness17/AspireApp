@@ -19,10 +19,19 @@ module.exports = function(app){
   };
   module.exports.GetUserById = GetUserById;
 
+  var GetUserCarOutputById = function GetUserCarOutputById(socialId, callback){
+    pg.connect(connect, function(err, client, done){
+      client.query("SELECT * FROM public.user_transportation WHERE social_id=$1", [socialId], function(err, result){
+        done();
+        callback(result);
+      }); 
+    });
+  };
+  module.exports.GetUserCarOutputById = GetUserCarOutputById;
+
   var GetUserBySocialId = function GetUserBySocialId(socialId, callback){
     pg.connect(connect, function(err, client, done){
       client.query("SELECT * FROM public.user WHERE social_id=$1", [socialId], function(err, result){
-        console.log(result);
         done();
         callback(result);
       }); 

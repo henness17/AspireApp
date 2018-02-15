@@ -130,6 +130,9 @@
   <div id="map"></div>
 
   <script type="text/javascript">
+    var resultObj = <%- JSON.stringify(carOutput); %>
+    var carOutput = resultObj.rows[0].car_output;
+    alert(carOutput);
     var directionsDisplayWalking;
     var directionsDisplayTransit;
     var directionsDisplayDriving;
@@ -299,7 +302,7 @@
             document.getElementById("cost_driving_time").innerHTML = time;
             document.getElementById("cost_driving_money").innerHTML = "$" + money;
             document.getElementById("cost_driving_distance").innerHTML = distance;
-            document.getElementById("cost_driving_carbon").innerHTML= (distance2 * metersPerMile * 0.411 * 2.2).toFixed(2) + " lbs" ;
+            document.getElementById("cost_driving_carbon").innerHTML= ((distance2/1609.34) * carOutput).toFixed(2) + " lbs" ;
             break;
           case google.maps.TravelMode.TRANSIT:
             if(response[0].fare === undefined)
