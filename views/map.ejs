@@ -339,7 +339,11 @@
     function selectTransportation(travelmode){
       switch(travelmode) {
         case 'driving':
-          alert('You chose driving!');
+          if (confirm("Take driving route?")) {
+            alert("You chose driving!");
+          } else {
+            alert("You didn't choose driving!");
+          }
           break;
         case 'transit':
           alert('You chose transit!');
@@ -352,7 +356,7 @@
           break;
       }
     } 
-    
+
   </script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCu3w5-56_sl6eCbmxaN5HAoSNbHWbIrE&libraries=places&callback=initMap" async defer>
   </script>
