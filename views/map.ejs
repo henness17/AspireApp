@@ -137,13 +137,25 @@
     var directionsDisplayDriving;
     var directionsDisplayBicycling;
     function initMap() {
+      var latCoord = 45.57;
+      var lngCoord = -122.72;
+      navigator.geolocation.getCurrentPosition(success, error);
+      function success(position){
+        latCoord  = position.coords.latitude;
+        lngCoord = position.coords.longitude;
+        var center = new google.maps.LatLng(latCoord, lngCoord);
+        map.panTo(center);
+      }
+      function error(position){
+        // do nothing
+      }
       var origin_place_id = null;
       var destination_place_id = null;
       var travel_mode = google.maps.TravelMode.DRIVING;
       var map = new google.maps.Map(document.getElementById('map'), {
         mapTypeId: 'roadmap',
         mapTypeControl: false,
-        center: {lat: 45.57, lng: -122.72},
+        center: {lat: latCoord, lng: lngCoord},
         zoom: 13
       });
       var directionsService = new google.maps.DirectionsService;
