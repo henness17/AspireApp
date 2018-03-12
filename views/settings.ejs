@@ -3,7 +3,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<% include partials/bootstrap %>
-
+	<style>
+    <% include css/general %>
+  </style>
 	<script type="text/javascript">
 		// Check if the page is loaded and ready
 		$(document).ready(function() {
@@ -229,6 +231,7 @@
 </head>
 
 <body>
+<% include partials/navbar %>
 Hello, <%= user.displayName %>!
 
 <form action="/post-user-transportation-settings" method="post" id="settingsform">
