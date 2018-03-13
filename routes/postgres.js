@@ -119,7 +119,7 @@ module.exports = function(app){
         formResults.saved,
         formResults.worst_case], function(err, result){
           done();
-          callback();
+          callback(formResults);
         }); 
     });
   };

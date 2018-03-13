@@ -9,8 +9,10 @@
   <% include partials/navbar %>
   Aspire App
   Hello, <%= user.displayName %>!
-  <%= 
-    JSON.parse(stream)[0].actor; 
+  <%
+  for(var i = 0; i < 10; i++){%>
+    <li><%= JSON.parse(stream)[i].message; %></li>
+  <%}%> 
   %>
 </body>
 </html>
