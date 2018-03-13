@@ -70,7 +70,7 @@ module.exports = function(app){
         verb: 'add',
         object: 'picture:10',
         foreign_id: 'picture:10',
-        message: 'BEEEEP.'
+        message: req.user.displayName + ' saved ' + formResults.saved + '!'
       });
       res.redirect('/');
     }
