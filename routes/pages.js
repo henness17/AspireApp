@@ -52,6 +52,13 @@ module.exports = function(app){
     }
   });
 
+  app.post('/post-user-transportation', function(req, res){
+    postgres.PostUserTransportation(req.user.id, req.body, callback);
+    function callback(){
+      res.redirect('/');
+    }
+  });
+
   function isLoggedIn(req, res, next) {
     if (req.user) {
       next();
