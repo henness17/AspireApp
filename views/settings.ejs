@@ -3,7 +3,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<% include partials/bootstrap %>
-
+	<style>
+    <% include css/general %>
+  </style>
 	<script type="text/javascript">
 		// Check if the page is loaded and ready
 		$(document).ready(function() {
@@ -229,60 +231,34 @@
 </head>
 
 <body>
-Hello, <%= user.displayName %>!
-
+<% include partials/navbar %>
 <form action="/post-user-transportation-settings" method="post" id="settingsform">
-Username:<input type="text" name="fname"><br>
-<table id="carTable">
-	<thead>
-		<tr>
-			<th>Car #</th>
-			<th>Year</th>
-			<th>Make</th>
-			<th>Model</th>
-			<th>Transmission</th>
-			<th>Engine</th>
-			<th>Aspiration</th>
-			<th>Car Output</th>
-		</tr>
-	</thead>
-	<tfoot>
-		<tr>
-			<td>
-				<input id="bttnAddCar" type="button" value="Add car">
-			</td>
-		</tr>
-	</tfoot>
-	<tbody>
-		<tr>
-			<td>1</td>
-			<td>
-				<select class="filteredSelect" name="year" form="settingsform" style="width:120px"></select>
-			</td>
-			<td>
-				<select class="filteredSelect" name="make" form="settingsform" style="width:120px"></select>							
-			</td>
-			<td>
-				<select class="filteredSelect" name="model" form="settingsform" style="width:120px"></select>			
-			</td>
-			<td>
-				<select class="filteredSelect" name="transmission" form="settingsform" style="width:120px"></select>		
-			</td>
-			<td>
-				<select class="filteredSelect" name="engine" form="settingsform" style="width:120px"></select>		
-			</td>
-			<td>
-				<select class="filteredSelect" name="aspiration" form="settingsform" style="width:120px"></select>		
-			</td>
-			<td>
-				<label name="carOutputLabel">...</label>
-				<input type="text" Readonly="readonly" style="display:none" name="car_output" form="settingsform" ><br>		
-			</td>
-		</tr>
-	</tbody>
-</table> <br>
+<div class="form-group">
+	<label class="control-label" for="year_id">Year</label>
+	<select class="form-control" id="year_id" name="year" form="settingsform" style="width:120px"></select><br>
 
-  <input type="submit">
+	<label class="control-label" for="make_id">Make</label>
+	<select class="form-control" id="make_id" name="make" form="settingsform" style="width:120px"></select><br>
+
+	<label class="control-label" for="model_id">Model</label>					
+	<select class="form-control" for="model_id" name="model" form="settingsform" style="width:120px"></select><br>
+
+	<label class="control-label" for="transmission_id">Transmission</label>	
+	<select class="form-control" id="transmission_id" name="transmission" form="settingsform" style="width:120px"></select><br>
+
+	<label class="control-label" for="engine_id">Engine</label>		
+	<select class="form-control" for="engine_id" name="engine" form="settingsform" style="width:120px"></select><br>
+
+	<label class="control-label" for="aspiration_id">Aspiration</label>
+	<select class="form-control" id="aspiration_id" name="aspiration" form="settingsform" style="width:120px"></select><br>	
+
+	<label name="carOutputLabel">...</label>
+	<input type="text" Readonly="readonly" style="display:none" name="car_output" form="settingsform">
+</div>	
+</form>
+<br>
+
+<input class="btn btn-primary" name="submit" type="submit">
 </form>
 </body>
 </html>
