@@ -15,8 +15,21 @@
 </head>
 <body>
   <% include partials/navbar %>
-  Aspire App
-  Hello, <%= user.displayName %>!
+
+  <div class="w3-card w3-round w3-white">
+    <div class="w3-container">
+     <h4 class="w3-center"><%= user.displayName %></h4>
+     <p class="w3-center"><img src="https://api.adorable.io/avatar/285/<%= user.displayName %>" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
+     <hr>
+     <center><p>Level 23</p></center>
+     <p>
+      <div class="progress">
+        <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+     </p>
+    </div>
+  </div>
+
   <%
   for(var i = 0; i < 10; i++){%>
     <div class="w3-col m7">
@@ -31,4 +44,9 @@
   <%}%> 
   %>
 </body>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $( ".home" ).addClass( "active" );
+  });
+</script>
 </html>
