@@ -50,11 +50,18 @@ module.exports = function(app){
 
   app.post('/post-user-transportation-settings', function(req, res){
     postgres.PostUserTransportationSettings(req.user.id, req.body, callback);
+    function callback(){
+      res.redirect('/');
+    }
+  });
+
+  app.post('/post-user-transportation', function(req, res){
+    postgres.PostUserTransportation(req.user.id, req.body, callback);
     function callback(formResults){
       var stream = require('getstream');
       // Instantiate a new client (server side)
       client = stream.connect('xdf3g5het37w', 'uupshw76yxynb5ej4w9vxy3cvvqkkfqk782hen4dtdn5v8sxtudbrkq2wdp7fppj', '30639');
-      var userName = String(socialId);
+      var userName = String(req.user.id);
       var user = client.feed('user', userName);
       // User follows everyone
       var userTimeline = client.feed('timeline', userName);
@@ -63,15 +70,8 @@ module.exports = function(app){
         verb: 'add',
         object: 'picture:10',
         foreign_id: 'picture:10',
-        message: 'WHATS UP WHATS UP WHATS UP WHATS UP WHATS UP.'
+        message: 'BEEEEP.'
       });
-      res.redirect('/');
-    }
-  });
-
-  app.post('/post-user-transportation', function(req, res){
-    postgres.PostUserTransportation(req.user.id, req.body, callback);
-    function callback(){
       res.redirect('/');
     }
   });
