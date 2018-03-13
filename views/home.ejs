@@ -1,8 +1,15 @@
 <html>
 <head>
   <% include partials/bootstrap %>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     <% include css/general %>
+    html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
   </style>
 </head>
 <body>
@@ -11,7 +18,15 @@
   Hello, <%= user.displayName %>!
   <%
   for(var i = 0; i < 10; i++){%>
-    <li><%= JSON.parse(stream)[i].message; %></li>
+    <div class="w3-col m7">
+      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <img src="https://avatars3.githubusercontent.com/u/9355546?s=400&u=907a0005ce2f22b4efb8ba3cb1ecb10d6400a908&v=4" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+        <span class="w3-right w3-opacity">16 min</span>
+        <h4>Ryan Henness</h4><br>
+        <hr class="w3-clear">
+        <p><%= JSON.parse(stream)[i].message; %></p>
+      </div>  
+    </div>
   <%}%> 
   %>
 </body>
