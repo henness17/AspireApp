@@ -70,11 +70,11 @@ module.exports = function(app){
       // User follows everyone
       var userTimeline = client.feed('timeline', userName);
       user.addActivity({
-        actor: userName,
+        actor: req.user.displayName,
         verb: 'add',
         object: 'picture:10',
         foreign_id: 'picture:10',
-        message: req.user.displayName + ' saved ' + formResults.saved + '!'
+        message: 'I saved ' + formResults.saved + ' while using transportation!'
       });
       res.redirect('/');
     }
