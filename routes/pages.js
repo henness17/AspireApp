@@ -9,8 +9,14 @@ module.exports = function(app){
 
   app.get('/', isLoggedIn, isRegistered, isSettingsSet, function(req, res){
     followAllUsers(req, res, callback);
+    console.log("After follow all users");
     function callback(stream){
-      res.render('home', {user: req.user, stream: stream});
+      console.log("Before get savings");
+      postgres.GetUserTotalSavingsById(req.user.id, callback2);
+      console.log("After get savings");
+      function callback2(savings){
+        res.render('home', {user: req.user, stream: stream, savings: savings});
+      }
     }
   });
 
@@ -79,7 +85,10 @@ module.exports = function(app){
         foreign_id: 'picture:10',
         message: 'I saved ' + formResults.saved + ' while using transportation!'
       });
-      res.redirect('/');
+      postgres.UpdateAddUserTotalSavings(req.user.id, formResults.saved, callback2);
+      function callback2(){
+        res.redirect('/');
+      }
     }
   });
 
