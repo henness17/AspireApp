@@ -11,7 +11,7 @@
 		$(document).ready(function() {
 			// Currently selects each of the elements with the filterSelect class name and uses jquery plug in Select2
 			// to convert the select lists to searchable drop down lists
-			$('.filteredSelect').select2();
+			$('select').select2();
 
 			// Adds a dummy option indicating the user to select a year
 			$("select[name=year]").append($('<option></option>').html("Please select a year"));
@@ -234,22 +234,22 @@
 <% include partials/navbar %>
 <form action="/post-user-transportation-settings" method="post" id="settingsform">
 <div class="form-group">
-	<label class="control-label" for="year_id">Year</label>
+	<label class="control-label" for="year_id">Year</label><br>
 	<select class="form-control" id="year_id" name="year" form="settingsform" style="width:120px"></select><br>
 
-	<label class="control-label" for="make_id">Make</label>
+	<label class="control-label" for="make_id">Make</label><br>
 	<select class="form-control" id="make_id" name="make" form="settingsform" style="width:120px"></select><br>
 
-	<label class="control-label" for="model_id">Model</label>					
+	<label class="control-label" for="model_id">Model</label><br>				
 	<select class="form-control" for="model_id" name="model" form="settingsform" style="width:120px"></select><br>
 
-	<label class="control-label" for="transmission_id">Transmission</label>	
+	<label class="control-label" for="transmission_id">Transmission</label><br>	
 	<select class="form-control" id="transmission_id" name="transmission" form="settingsform" style="width:120px"></select><br>
 
-	<label class="control-label" for="engine_id">Engine</label>		
+	<label class="control-label" for="engine_id">Engine</label>		<br>
 	<select class="form-control" for="engine_id" name="engine" form="settingsform" style="width:120px"></select><br>
 
-	<label class="control-label" for="aspiration_id">Aspiration</label>
+	<label class="control-label" for="aspiration_id">Aspiration</label><br>
 	<select class="form-control" id="aspiration_id" name="aspiration" form="settingsform" style="width:120px"></select><br>	
 
 	<label name="carOutputLabel">...</label>

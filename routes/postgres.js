@@ -8,6 +8,17 @@ module.exports = function(app){
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false}));
 
+  var GetAllUserIds = function GetAllUserIds(callback){
+    pg.connect(connect, function(err, client, done){
+      client.query("SELECT * FROM public.user", function(err, result){
+        console.log(result);
+        done();
+        callback(result);
+      });    
+    });
+  };
+  module.exports.GetAllUserIds = GetAllUserIds;
+
   var GetUserById = function GetUserById(id, callback){
     pg.connect(connect, function(err, client, done){
       client.query("SELECT * FROM public.user WHERE id=$1", [id], function(err, result){

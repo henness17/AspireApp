@@ -3,12 +3,15 @@ module.exports = function(app){
   var postgres = require('./postgres.js');
   var bodyParser = require('body-parser'),
   path = require('path'),
-  fs = require("fs");;
+  fs = require("fs");
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false}));
 
   app.get('/', isLoggedIn, isRegistered, isSettingsSet, function(req, res){
-    res.render('home', {user: req.user});
+    followAllUsers(req, res, callback);
+    function callback(stream){
+      res.render('home', {user: req.user, stream: stream});
+    }
   });
 
   app.get('/login', function(req, res){
@@ -82,6 +85,33 @@ module.exports = function(app){
       }else{
         next();
       }
+    }
+  }
+
+  function followAllUsers(req, res, next){
+    var stream = require('getstream');
+    // Instantiate a new client (server side)
+    client = stream.connect(process.env.STREAM_ID, process.env.STREAM_SECRET, process.env.STREAM_APP);
+    var userName = String(req.user.id);
+    var user = client.feed('user', userName);
+    // User follows everyone
+    var userTimeline = client.feed('timeline', userName);
+    postgres.GetAllUserIds(callback);
+    function callback(result){
+      for(var i = 0; i < result.rows.length; i++){
+        userTimeline.follow('user', result.rows[i].social_id);
+      }
+
+      // User gets their timeline
+      userTimeline.get({ limit: 10 }).then(function(results) {
+          var activityData = results;
+          console.log(results);
+          next(JSON.stringify(results.results));
+          // Read the next page, using id filtering for optimal performance:
+          userTimeline.get({ limit: 10, id_lte: activityData[activityData.length-1].id }).then(function(results2) {
+            var nextActivityData = results2;
+        });
+      });
     }
   }
 }
