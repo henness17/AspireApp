@@ -109,4 +109,19 @@ module.exports = function(app){
     });
   };
   module.exports.PostUserTransportationSettings = PostUserTransportationSettings;
+
+  var PostUserTransportation = function PostUserTransportation(socialId, formResults, callback){
+    var date = new Date();
+    pg.connect(connect, function(err, client, done){
+      client.query("INSERT INTO public.user_savings (social_id,type,saved,worst_case) VALUES ($1,$2,$3,$4)", 
+      [socialId,
+        formResults.type,
+        formResults.saved,
+        formResults.worst_case], function(err, result){
+          done();
+          callback();
+        }); 
+    });
+  };
+  module.exports.PostUserTransportation = PostUserTransportation;
 };
