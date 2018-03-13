@@ -76,7 +76,10 @@ module.exports = function(app){
         foreign_id: 'picture:10',
         message: 'I saved ' + formResults.saved + ' while using transportation!'
       });
-      res.redirect('/');
+      postgres.UpdateAddUserTotalSavings(req.user.id, formResults.saved, callback2);
+      function callback2(){
+        res.redirect('/');
+      }
     }
   });
 
