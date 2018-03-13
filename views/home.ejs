@@ -21,12 +21,24 @@
      <h4 class="w3-center"><%= user.displayName %></h4>
      <p class="w3-center"><img src="https://api.adorable.io/avatar/285/<%= user.displayName %>" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
      <hr>
-     <center><p>Level <%= Math.floor(savings / 10) %></p></center>
      <p>
       <div class="progress">
         <% var progress = (savings/10 - Math.floor(savings/10)) * 100 %>
-        <div class="progress-bar progress-bar-striped" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar progress-bar-striped" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">Level <%= Math.floor(savings / 10) %></div>
       </div>
+     </p>
+     <p>
+       <div class="progress">
+        <div class="progress-bar progress-bar-success" role="progressbar" style="width:40%">
+          Transportation (40%)
+        </div>
+        <div class="progress-bar progress-bar-warning" role="progressbar" style="width:40%">
+          Food/Recycle (40%)
+        </div>
+        <div class="progress-bar progress-bar-info" role="progressbar" style="width:20%">
+          Housing (20%)
+        </div>
+       </div>
      </p>
      <p>You've saved <%= savings %> pounds of carbon dioxide!</p>
     </div>
