@@ -10,20 +10,65 @@
     // to convert the select lists to searchable drop down lists
     $('select').select2();
 
-    // Function to remove duplicate options in a list
-    function removeDups(listOptions){
-      // Removes duplicate options in the select
-      var usedNames = {};
-      listOptions.each(function () {
-        if(usedNames[this.text]) {
-          $(this).remove();
-        } else {
-          usedNames[this.text] = this.value;
+    var data = <%- JSON.stringify(foodrecycleJson); %>
+    var materials = Object.keys(data.Materials);
+    // Adds a dummy option indicating the user to select a year
+    $("select[name=material]").append($('<option></option>').val("-1").html("Please select a material"));
+
+    for (var i=0;i < materials.length;i++)
+    {
+      $("select[name=material]").append($('<option></option>').val(materials[i]).html(materials[i].replace("_"," ")));
+    }
+    
+    $("select[name=material]").change(function(){
+      Material($(this).find("option:selected").val());
+    });
+
+    $("select[name=waste_method]").change(function(){
+      WasteMedthodSelected($("select[name=material]").find("option:selected").val(), $(this).find("option:selected").val());
+    });
+    //console.log(data.Materials["Aluminum_Can"].Waste_Method["Recycled"]);
+
+    function Material(selectedTxt){
+      // Remove all options in the rest of the select lists
+      $("select[name=waste_method] option").remove();
+        
+      // Added -1 to our dummy option to avoid trying to use it to find JSON values
+      if(selectedTxt != -1){
+        var waste_methods = Object.keys(data.Materials[selectedTxt].Waste_Method);
+        for (var i=0;i < waste_methods.length;i++)
+        {
+          $("select[name=waste_method]").append($('<option></option>').val(waste_methods[i]).html(waste_methods[i].replace("_"," ")));
         }
-      });
-      
+        
+        WasteMedthodSelected(selectedTxt, waste_methods[0]);
+      }
+        
+    }
+    function WasteMedthodSelected(MaterialTxt, selectedTxt){
+      var constant = data.Materials[MaterialTxt].Waste_Method[selectedTxt];
+      if($("input[name=quantity]").val() > 0){
+        updateEmissionLbl(constant*$("input[name=quantity]").val());
+      }
     }
 
+    $("input[name=quantity]").bind('keyup mouseup', function () {
+      // Added -1 to our dummy option to avoid trying to use it to find JSON values
+      if($("select[name=material]").find("option:selected").val() != -1){
+        var constant = data.Materials[$("select[name=material]").find("option:selected").val()].Waste_Method[$("select[name=waste_method]").find("option:selected").val()];
+        if(constant != null){
+          updateEmissionLbl(constant*$(this).val());
+        } 
+      }
+           
+    });
+
+    function updateEmissionLbl(value){
+      $('label[name=emissionsLabel]').text(value + " lbs CO2 net emission");
+    }
+    
+		$( ".foodrecycle" ).addClass( "active" );
+      
   });
   </script>
 
@@ -38,14 +83,14 @@
   <form action="/post-user-foodrecycle" method="post" id="foodrecycleform">
   <center>
   <div class="form-group">
-    <label class="control-label" for="Material_id">Material</label><br>
-    <select class="form-control" id="Material_id" name="Material" form="foodrecycleform" style="width:120px"></select><br>
+    <label class="control-label" for="material_id">Material</label><br>
+    <select class="form-control" id="material_id" name="material" form="foodrecycleform" style="width:120px"></select><br>
 
-    <label class="control-label" for="waist_method_id">Waist Method</label><br>
-    <select class="form-control" id="waist_method_id" name="waist_method" form="foodrecycleform" style="width:120px"></select><br>
+    <label class="control-label" for="waste_method_id">Waste Method</label><br>
+    <select class="form-control" id="waste_method_id" name="waste_method" form="foodrecycleform" style="width:120px"></select><br>
 
-    <label class="control-label" for="Quantity_id">Quantity</label><br>				
-    <input class="form-control" for="Quantity_id" name="Quantity" form="foodrecycleform" style="width:120px"></input><br>
+    <label class="control-label" for="quantity_id">Quantity</label><br>				
+    <input class="form-control" for="quantity_id" type="number" min="1" name="quantity" form="foodrecycleform" style="width:120px"></input><br>
     
     <label class="control-label" name="emissionsLabel">...</label>
     <input type="text" Readonly="readonly" style="display:none" name="emissions" form="foodrecycleform">
@@ -54,9 +99,4 @@
   </center>
 </form>
 </body>
-<script type="text/javascript">
-  $(document).ready(function() {
-    $( ".foodrecycle" ).addClass( "active" );
-  });
-</script>
 </html>

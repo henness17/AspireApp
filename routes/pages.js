@@ -29,7 +29,10 @@ module.exports = function(app){
   });
 
   app.get('/foodrecycle', isLoggedIn, isRegistered, isSettingsSet, function(req, res){
-    res.render('foodrecycle', {user: req.user});
+    var foodrecycleData = fs.readFileSync("data/foodrecycle.json");
+    var foodrecycleJson = JSON.parse(foodrecycleData);
+    res.render('foodrecycle', {user: req.user,
+      foodrecycleJson: foodrecycleJson,});
   });
 
   app.get('/settings', isLoggedIn, isRegistered, function(req, res){
