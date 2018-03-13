@@ -1,11 +1,58 @@
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <% include partials/bootstrap %>
   <% include css/general %>
+	<script type="text/javascript">
+  // Check if the page is loaded and ready
+  $(document).ready(function() {
+    // Currently selects each of the elements with the filterSelect class name and uses jquery plug in Select2
+    // to convert the select lists to searchable drop down lists
+    $('select').select2();
+
+    // Function to remove duplicate options in a list
+    function removeDups(listOptions){
+      // Removes duplicate options in the select
+      var usedNames = {};
+      listOptions.each(function () {
+        if(usedNames[this.text]) {
+          $(this).remove();
+        } else {
+          usedNames[this.text] = this.value;
+        }
+      });
+      
+    }
+
+  });
+  </script>
+
 </head>
 <body>
-<% include partials/navbar %>
-Hello
+  <% include partials/navbar %>
+  <center><H1>Welcome to the Food and Recycling page</H1><br></center>
+  <div class="form-group" id="recentSection">
+  <center><label class="control-label" for="Recent_id">Recent</label></center><br>
+  </div><br>
+  
+  <form action="/post-user-foodrecycle" method="post" id="foodrecycleform">
+  <center>
+  <div class="form-group">
+    <label class="control-label" for="Material_id">Material</label><br>
+    <select class="form-control" id="Material_id" name="Material" form="foodrecycleform" style="width:120px"></select><br>
+
+    <label class="control-label" for="waist_method_id">Waist Method</label><br>
+    <select class="form-control" id="waist_method_id" name="waist_method" form="foodrecycleform" style="width:120px"></select><br>
+
+    <label class="control-label" for="Quantity_id">Quantity</label><br>				
+    <input class="form-control" for="Quantity_id" name="Quantity" form="foodrecycleform" style="width:120px"></input><br>
+    
+    <label class="control-label" name="emissionsLabel">...</label>
+    <input type="text" Readonly="readonly" style="display:none" name="emissions" form="foodrecycleform">
+  </div>
+  <input class="btn btn-primary" name="submit" type="submit">
+  </center>
+</form>
 </body>
 <script type="text/javascript">
   $(document).ready(function() {
