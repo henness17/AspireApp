@@ -50,6 +50,16 @@ module.exports = function(app){
   };
   module.exports.GetUserBySocialId = GetUserBySocialId;
 
+  var GetUserRecentsById = function GetUserRecentsById(socialId, callback){
+    pg.connect(connect, function(err, client, done){
+      client.query("SELECT * FROM public.user_foodrecycle WHERE social_id=$1", [socialId], function(err, result){
+        done();
+        callback(result.rows[0].recents);
+      }); 
+    });
+  };
+  module.exports.GetUserRecentsById = GetUserRecentsById;
+
   var GetUserSettingsBySocialId = function GetUserSettingsBySocialId(socialId, callback){
     pg.connect(connect, function(err, client, done){
       client.query("SELECT * FROM public.user_transportation WHERE social_id=$1", [socialId], function(err, result){
@@ -74,8 +84,10 @@ module.exports = function(app){
   var PostUserBySocialId = function PostUserBySocialId(socialId, callback){
     pg.connect(connect, function(err, client, done){
       client.query("INSERT INTO public.user (social_id) VALUES ($1)", [socialId], function(err, result){
-        done();
-        callback();
+        client.query("INSERT INTO public.user_foodrecycle (social_id) VALUES ($1)", [socialId], function(err, result){
+          done();
+          callback();
+        });
       }); 
     });
   };

@@ -37,8 +37,12 @@ module.exports = function(app){
   app.get('/foodrecycle', isLoggedIn, isRegistered, isSettingsSet, function(req, res){
     var foodrecycleData = fs.readFileSync("data/foodrecycle.json");
     var foodrecycleJson = JSON.parse(foodrecycleData);
-    res.render('foodrecycle', {user: req.user,
-      foodrecycleJson: foodrecycleJson,});
+    // Get the user's recents from postgres
+    postgres.GetUserRecentsById(req.user.id, callback);
+    function callback(recents){
+      res.render('foodrecycle', {user: req.user,
+        foodrecycleJson: foodrecycleJson, recents: recents});
+    }
   });
 
   app.get('/settings', isLoggedIn, isRegistered, function(req, res){
