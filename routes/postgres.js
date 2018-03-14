@@ -117,9 +117,9 @@ module.exports = function(app){
       // Bump recents list if needed
       client.query("SELECT * FROM public.user_foodrecycle WHERE social_id=$1", [socialId], function(err, result){
           var recents = result.rows[0].recents;
+          var newRecents = [formResults.material, recents[0], recents[1]];
           if(recents.indexOf(formResults.material) == -1){
-            client.query("UPDATE public.foodrecycle SET recents=$1 WHERE social_id=$2", 
-                        [[formResults.materal, recents[0], recents[1]]], function(err, result){
+            client.query("UPDATE public.user_foodrecycle SET recents=$1 WHERE social_id=$2", [newRecents, socialId], function(err, result){
               done();
             }); 
           }
