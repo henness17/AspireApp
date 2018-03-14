@@ -103,6 +103,32 @@ module.exports = function(app){
   };
   module.exports.PostUserSettingsBySocialId = PostUserSettingsBySocialId;
 
+  var PostUserFoodRecycle = function PostUserFoodRecycle(socialId, formResults, callback){
+    pg.connect(connect, function(err, client, done){
+      client.query("INSERT INTO public.user_savings (social_id,type,saved,worst_case) VALUES ($1,$2,$3,$4)", 
+      [socialId,
+        formResults.type,
+        formResults.saved,
+        formResults.worst_case], function(err, result){
+          done();
+          callback(formResults); // Will need to pass formResults back to populate stream
+      }); 
+
+      // Bump recents list if needed
+      client.query("SELECT * FROM public.user_foodrecycle WHERE social_id=$1", [socialId], function(err, result){
+          var recents = result.rows[0].recents;
+          if(recents.indexOf(formResults.material) == -1){
+            client.query("UPDATE public.foodrecycle SET recents=$1 WHERE social_id=$2", 
+                        [[formResults.materal, recents[0], recents[1]]], function(err, result){
+              done();
+            }); 
+          }
+          done();
+      }); 
+    });
+  };
+  module.exports.PostUserFoodRecycle = PostUserFoodRecycle;
+
   var PostUserTransportationSettings = function PostUserTransportationSettings(socialId, formResults, callback){
     pg.connect(connect, function(err, client, done){
       GetUserSettingsBySocialId(socialId, callback2);

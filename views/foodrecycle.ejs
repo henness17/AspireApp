@@ -69,6 +69,16 @@
     
 		$( ".foodrecycle" ).addClass( "active" );
       
+    $("#recent0").click(function(){
+      $("select[name=material]").val('<%=recents[0]%>').change();
+    });
+    $("#recent1").click(function(){
+      $("select[name=material]").val("<%=recents[1]%>").change();
+    });
+    $("#recent2").click(function(){
+      $("select[name=material]").val("<%=recents[2]%>").change();
+    });
+
   });
   </script>
 
@@ -77,8 +87,11 @@
   <% include partials/navbar %>
   <center><H1>Welcome to the Food and Recycling page</H1><br></center>
   <div class="form-group" id="recentSection">
-  <center><label class="control-label" for="Recent_id">Recent</label></center><br>
-  <%= recents %>
+  <center><label class="control-label" for="Recent_id">Recent</label><br>
+  <li id="recent0"><%=recents[0]%></li>
+  <li id="recent1"><%=recents[1]%></li>
+  <li id="recent2"><%=recents[2]%></li>
+  </center>
   </div><br>
   
   <form action="/post-user-foodrecycle" method="post" id="foodrecycleform">

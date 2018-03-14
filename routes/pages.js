@@ -65,6 +65,17 @@ module.exports = function(app){
     }
   });
 
+  app.post('/post-user-foodrecycle', function(req, res){
+    postgres.PostUserFoodRecycle(req.user.id, req.body, callback);
+    function callback(formResults){
+      // Send information to stream
+      postgres.UpdateAddUserTotalSavings(req.user.id, formResults.saved, callback2);
+      function callback2(){
+        res.redirect('/');
+      }
+    }
+  });
+
   app.post('/post-user-transportation-settings', function(req, res){
     postgres.PostUserTransportationSettings(req.user.id, req.body, callback);
     function callback(){
@@ -77,7 +88,7 @@ module.exports = function(app){
     function callback(formResults){
       var stream = require('getstream');
       // Instantiate a new client (server side)
-      client = stream.connect('xdf3g5het37w', 'uupshw76yxynb5ej4w9vxy3cvvqkkfqk782hen4dtdn5v8sxtudbrkq2wdp7fppj', '30639');
+      client = stream.connect(process.env.STREAM_ID, process.env.STREAM_SECRET, process.env.STREAM_APP);
       var userName = String(req.user.id);
       var user = client.feed('user', userName);
       // User follows everyone
