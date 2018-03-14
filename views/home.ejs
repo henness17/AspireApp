@@ -46,15 +46,15 @@
         </div>
     </div>
     <%for(var i = 0; i < 10; i++){%>
-    <div class="w3-col m7">
-        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-            <img src="https://api.adorable.io/avatar/285/<%= JSON.parse(stream)[i].actor; %>" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
-            <span class="w3-right w3-opacity"> <%= timeSince(new Date(JSON.parse(stream)[i].time)) %>  ago</span>
-            <h4><%= JSON.parse(stream)[i].actor; %></h4><br>
-            <hr class="w3-clear">
-            <p><%= JSON.parse(stream)[i].message; %></p>
-        </div>  
-    </div>
+        <div class="w3-col">
+            <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+                <img src="https://api.adorable.io/avatar/285/<%= JSON.parse(stream)[i].actor; %>" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+                <span class="w3-right w3-opacity"> <%= timeSince(new Date(JSON.parse(stream)[i].time)) %>  ago</span>
+                <h4><%= JSON.parse(stream)[i].actor; %></h4><br>
+                <hr class="w3-clear">
+                <p><%= JSON.parse(stream)[i].message; %></p>
+            </div>  
+        </div>
     <%}%>
     
 <!-- Used for the Activity feed timestamp -->

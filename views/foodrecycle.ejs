@@ -5,7 +5,10 @@
         <% include css/general %>
         <style>
             .recent{
-                cursor: pointer; 
+                cursor: pointer;
+                border: 1px solid black;
+                list-style: none;
+                margin-bottom: 2px;
             }
         </style>
         <script type="text/javascript">
@@ -102,10 +105,13 @@
   <% include partials/navbar %>
   <center><H1>Welcome to the Food and Recycling page</H1><br></center>
   <div class="form-group" id="recentSection">
-  <center><label class="control-label" for="Recent_id">Recent</label><br>
-  <li class="recent" style="display:none"></li>
-  <li class="recent" style="display:none"></li>
-  <li class="recent" style="display:none"></li>
+  <center>
+    <div style="width:50%">
+        <label class="control-label" for="Recent_id">Recent</label><br>
+        <li class="recent" style="display:none"></li>
+        <li class="recent" style="display:none"></li>
+        <li class="recent" style="display:none"></li>
+    </div>
   </center>
   </div><br>
   
