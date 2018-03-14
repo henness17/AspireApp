@@ -13,7 +13,7 @@
 			$('select').select2();
 
 			// Adds a dummy option indicating the user to select a year
-			$("select[name=year]").append($('<option></option>').html("Please select a year"));
+			$("select[name=year]").append($('<option></option>').val("-1").html("Please select a year"));
 
 			for (var i=1998;i<=2018;i++)
 			{ 
@@ -29,56 +29,50 @@
 				yearSelected(userSettings.rows[0].year);
 				$("select[name=year]").val(userSettings.rows[0].year);
 
-				makeSelected(userSettings.rows[0].make);
+				makeSelected(userSettings.rows[0].year, userSettings.rows[0].make);
 				$("select[name=make]").val(userSettings.rows[0].make);
 				
-				modelSelected(userSettings.rows[0].model);
+				modelSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model);
 				$("select[name=model]").val(userSettings.rows[0].model);
 				
-				transmissionSelected(userSettings.rows[0].transmission);
+				transmissionSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission);
 				$("select[name=transmission]").val(userSettings.rows[0].transmission);
 				
-				engineSelected(userSettings.rows[0].engine);
+				engineSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission, userSettings.rows[0].engine);
 				$("select[name=engine]").val(userSettings.rows[0].engine);				
 
 				if(userSettings.rows[0].engine != "Electric"){
-					aspirationSelected(userSettings.rows[0].aspiration);
+					aspirationSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission, userSettings.rows[0].engine, userSettings.rows[0].aspiration);
 					$("select[name=aspiration]").val(userSettings.rows[0].aspiration);
 				}
 			}
 
 
 
-			var filteredY;
 			$("select[name=year]").change(function(){
-				yearSelected($(this).find("option:selected").text());
+				yearSelected($(this).find("option:selected").val());
 			});
 			
-			var filteredYMa;
 			$("select[name=make]").change(function(){
-				makeSelected($(this).find("option:selected").text());
+				makeSelected($("select[name=year]").find("option:selected").val(), $(this).find("option:selected").val());
 			});
 
-			var filteredYMaMo;
 			$("select[name=model]").change(function(){
-				modelSelected($(this).find("option:selected").text());
+				modelSelected($("select[name=year]").find("option:selected").val(), $("select[name=make]").find("option:selected").val(), $(this).find("option:selected").val());
 			});
 
 			
-			var filteredYMaMoT;
 			$("select[name=transmission]").change(function(){
-				transmissionSelected($(this).find("option:selected").text());
+				transmissionSelected($("select[name=year]").find("option:selected").val(), $("select[name=make]").find("option:selected").val(), $("select[name=model]").find("option:selected").val(), $(this).find("option:selected").val());
 				
 			});
 
-			var filteredYMaMoTE;
 			$("select[name=engine]").change(function(){
-				engineSelected($(this).find("option:selected").text());
+				engineSelected($("select[name=year]").find("option:selected").val(), $("select[name=make]").find("option:selected").val(), $("select[name=model]").find("option:selected").val(), $("select[name=transmission]").find("option:selected").val(), $(this).find("option:selected").val());
 			});
 
-			var filteredYMaMoTEA;
 			$("select[name=aspiration]").change(function(){
-				aspirationSelected($(this).find("option:selected").text());
+				aspirationSelected($("select[name=year]").find("option:selected").val(), $("select[name=make]").find("option:selected").val(), $("select[name=model]").find("option:selected").val(), $("select[name=transmission]").find("option:selected").val(), $("select[name=engine]").find("option:selected").val(),$(this).find("option:selected").val());
 			});
 
 
@@ -89,117 +83,112 @@
 				$("select[name=transmission] option").remove();
 				$("select[name=engine] option").remove();
 				$("select[name=aspiration] option").remove();
-				
-				
-				filteredY = $(data).filter(function (i,n){
-					if (n.Year == selectedTxt){
-						$("select[name=make]").append($('<option></option>').val(n.Make).html(n.Make));
-						return n;
-					}
-				});
 
-				removeDups($("select[name=make] option"));
-				
-				if(filteredY.length > 0){
-					// Adds a dummy option indicating the user to select a make
-					$("select[name=make]").prepend($('<option selected></option>').html("Please select a Make"));
+				// Added -1 to our dummy option to avoid trying to use it to find JSON values
+				if(selectedTxt != -1){
+					
+					var makes = Object.keys(data.Years[selectedTxt].Makes);
+					for (var i=0;i < makes.length;i++)
+					{
+						$("select[name=make]").append($('<option></option>').val(makes[i]).html(makes[i]));
+					}
+					if(makes.length > 0){
+						// Adds a dummy option indicating the user to select a Model
+						$("select[name=make]").prepend($('<option selected></option>').val("-1").html("Please select a Make"));
+					}
 				}
 
 			}
-			function makeSelected(selectedTxt){
+			function makeSelected(year, selectedTxt){
 				// Remove all options in the rest of the select lists
 				$("select[name=model] option").remove();
 				$("select[name=transmission] option").remove();
 				$("select[name=engine] option").remove();
 				$("select[name=aspiration] option").remove();
-
-				filteredYMa = $(filteredY).filter(function (i,n){
-					if (n.Make == selectedTxt){
-						$("select[name=model]").append($('<option></option>').val(n.Model).html(n.Model));
-						return n;						
+				// Added -1 to our dummy option to avoid trying to use it to find JSON values
+				if(selectedTxt != -1){
+					
+					var models = Object.keys(data.Years[year].Makes[selectedTxt].Models);
+					for (var i=0;i < models.length;i++)
+					{
+						$("select[name=model]").append($('<option></option>').val(models[i]).html(models[i]));
 					}
-				
-				});
-				removeDups($("select[name=model] option"));
-
-				if(filteredYMa.length > 0){
-					// Adds a dummy option indicating the user to select a Model
-					$("select[name=model]").prepend($('<option selected></option>').html("Please select a Model"));
+					if(models.length > 0){
+						// Adds a dummy option indicating the user to select a Model
+						$("select[name=model]").prepend($('<option selected></option>').val("-1").html("Please select a Model"));
+					}
 				}
 			}
-			function modelSelected(selectedTxt){
+			function modelSelected(year, make, selectedTxt){
 				// Remove all options in the remaining lists
 				$("select[name=transmission] option").remove();
 				$("select[name=engine] option").remove();
 				$("select[name=aspiration] option").remove();
 				
-				filteredYMaMo = $(filteredYMa).filter(function (i,n){
-					if (n.Model == selectedTxt){
-						$("select[name=transmission]").append($('<option></option>').val(n.Transmission).html(n.Transmission));
-						return n;						
-					}
 				
-				});
-				removeDups($("select[name=transmission] option"));
 
-				if(filteredYMaMo.length > 0){
-					// Adds a dummy option indicating the user to select a transmission
-					$("select[name=transmission]").prepend($('<option selected></option>').html("Please select a Transmission"));
+				// Added -1 to our dummy option to avoid trying to use it to find JSON values
+				if(selectedTxt != -1){
+					var transmissions = Object.keys(data.Years[year].Makes[make].Models[selectedTxt].Transmissions);
+					for (var i=0;i < transmissions.length;i++)
+					{
+						$("select[name=transmission]").append($('<option></option>').val(transmissions[i]).html(transmissions[i]));
+					}
+					if(transmissions.length > 0){
+						// Adds a dummy option indicating the user to select a Model
+						$("select[name=transmission]").prepend($('<option selected></option>').val("-1").html("Please select a Transmission"));
+					}
 				}
 			}
-			function transmissionSelected(selectedTxt){
+			function transmissionSelected(year, make, model, selectedTxt){
 				// Remove all the options in the remaining lists
 				$("select[name=engine] option").remove();
 				$("select[name=aspiration] option").remove();
 
-				filteredYMaMoT = $(filteredYMaMo).filter(function (i,n){
-					if (n.Transmission == selectedTxt){
-						$("select[name=engine]").append($('<option></option>').val(n.Engine).html(n.Engine)
-						);
-						return n;						
+				// Added -1 to our dummy option to avoid trying to use it to find JSON values
+				if(selectedTxt != -1){
+					var engines = Object.keys(data.Years[year].Makes[make].Models[model].Transmissions[selectedTxt].Engines);
+					for (var i=0;i < engines.length;i++)
+					{
+						$("select[name=engine]").append($('<option></option>').val(engines[i]).html(engines[i]));
 					}
-				
-				});
-
-				removeDups($("select[name=engine] option"));
-				if(filteredYMaMoT.length > 0){
-					// Adds a dummy option indicating the user to select an Aspiration
-					$("select[name=engine]").prepend($('<option selected></option>').html("Please select a Engine"));
+					if(engines.length > 0){
+						// Adds a dummy option indicating the user to select a Model
+						$("select[name=engine]").prepend($('<option selected></option>').val("-1").html("Please select a Engine"));
+					}
 				}
 			}
 			
-			function engineSelected(selectedTxt){
+			function engineSelected(year, make, model, transmission, selectedTxt){
 				$("select[name=aspiration] option").remove();
-				filteredYMaMoTE = $(filteredYMaMoT).filter(function (i,n){
-					if (n.Engine == selectedTxt){
-						$("select[name=aspiration]").append($('<option></option>').val(n.Aspiration).html(n.Aspiration));
-						return n;						
-					}
-				});
-				
-				if(selectedTxt == "Electric"){
-					$('input[name=car_output]').val(filteredYMaMoTE[0].KwHPerMile);
-					$('label[name=carOutputLabel]').text(filteredYMaMoTE[0].KwHPerMile + " KwH/mile");
-					
-				}else{
-					removeDups($("select[name=aspiration] option"));
-					if(filteredYMaMoTE.length > 0){
-						// Adds a dummy option indicating the user to select a year
-						$("select[name=aspiration]").prepend($('<option selected></option>').html("Please select an aspiration"));
+
+				// Added -1 to our dummy option to avoid trying to use it to find JSON values
+				if(selectedTxt != -1){
+					if(selectedTxt == "Electric"){
+						var output = data.Years[year].Makes[make].Models[model].Transmissions[transmission].Engines[selectedTxt].KwHPerMile;
+						$('input[name=car_output]').val(output*0.00220462);
+						$('label[name=carOutputLabel]').text($('input[name=car_output]').val() + " KwH/mile");
+						$("#aspirationDisp").css("display", "none");
+					}else{
+						$("#aspirationDisp").removeAttr("style");
+						
+						var aspirations = Object.keys(data.Years[year].Makes[make].Models[model].Transmissions[transmission].Engines[selectedTxt].Aspirations);
+						for (var i=0;i < aspirations.length;i++)
+						{
+							$("select[name=aspiration]").append($('<option></option>').val(aspirations[i]).html(aspirations[i]));
+						}
+						if(aspirations.length > 0){
+							// Adds a dummy option indicating the user to select a Model
+							$("select[name=aspiration]").prepend($('<option selected></option>').val("-1").html("Please select a Aspiration"));
+						}
 					}
 				}
-
 			}
 
-			function aspirationSelected(selectedTxt){
-				filteredYMaMoTEA = $(filteredYMaMoTE).filter(function (i,n){
-					if (n.Aspiration == selectedTxt){
-						return n;						
-					}
-				});
-
-				$('input[name=car_output]').val((filteredYMaMoTEA[0].gCO2PerMile)*0.00220462);
-				$('label[name=carOutputLabel]').text((filteredYMaMoTEA[0].gCO2PerMile)*0.00220462 + " lbs CO2/mile");
+			function aspirationSelected(year, make, model, transmission,engine, aspiration){
+				var output = data.Years[year].Makes[make].Models[model].Transmissions[transmission].Engines[engine].Aspirations[aspiration].gCO2PerMile;
+				$('input[name=car_output]').val(output*0.00220462);
+				$('label[name=carOutputLabel]').text($('input[name=car_output]').val() + " lbs CO2/mile");
 			}
 			/*$("#bttnAddCar").click(function(){
 				//var clone = $("#carTable tbody tr:last").clone();
@@ -208,21 +197,6 @@
 				$("#carTable tbody tr:last").after(clone);
 			});
 			*/
-
-
-			// Function to remove duplicate options in a list
-			function removeDups(listOptions){
-				// Removes duplicate options in the select
-				var usedNames = {};
-				listOptions.each(function () {
-					if(usedNames[this.text]) {
-						$(this).remove();
-					} else {
-						usedNames[this.text] = this.value;
-					}
-				});
-				
-			}
 
 			$( ".settings" ).addClass( "active" );
 		});
@@ -248,9 +222,11 @@
 	<label class="control-label" for="engine_id">Engine</label>		<br>
 	<select class="form-control" for="engine_id" name="engine" form="settingsform" style="width:120px"></select><br>
 
-	<label class="control-label" for="aspiration_id">Aspiration</label><br>
-	<select class="form-control" id="aspiration_id" name="aspiration" form="settingsform" style="width:120px"></select><br>	
-
+	<div id="aspirationDisp" style="display:none">
+		<label class="control-label" for="aspiration_id">Aspiration</label><br>
+		<select class="form-control" id="aspiration_id" name="aspiration" form="settingsform" style="width:120px"></select><br>	
+	</div>
+	
 	<label name="carOutputLabel">...</label>
 	<input type="text" Readonly="readonly" style="display:none" name="car_output" form="settingsform">
 </div>	
