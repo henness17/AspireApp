@@ -3,6 +3,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <% include partials/bootstrap %>
         <% include css/general %>
+        <style>
+            .recent{
+                cursor: pointer; 
+            }
+        </style>
         <script type="text/javascript">
             // Check if the page is loaded and ready
             $(document).ready(function() {
@@ -10,6 +15,9 @@
                 // to convert the select lists to searchable drop down lists
                 $('select').select2();
                 var data = <%- JSON.stringify(foodrecycleJson); %>
+                var recents = <%- JSON.stringify(recents);%>
+                recents = JSON.parse(recents);
+                
                 var materials = Object.keys(data.Materials);
                 // Adds a dummy option indicating the user to select a year
                 $("select[name=material]").append($('<option></option>').val("-1").html("Please select a material"));
@@ -57,18 +65,36 @@
                     $('label[name=emissionsLabel]').text(value + " lbs CO2 net emission");
                 }
     
-            		$( ".foodrecycle" ).addClass( "active" );
-                  
-                $("#recent0").click(function(){
-                  $("select[name=material]").val('<%=recents[0]%>'.split(' ').join('_')).change();
-                });
-                $("#recent1").click(function(){
-                  $("select[name=material]").val("<%=recents[1]%>".split(' ').join('_')).change();
-                });
-                $("#recent2").click(function(){
-                  $("select[name=material]").val("<%=recents[2]%>".split(' ').join('_')).change();
+                $( ".foodrecycle" ).addClass( "active" );
+                
+                $(".recent").each(function(i,obj){
+                    if(!jQuery.isEmptyObject(recents) && i < Object.keys(recents).length){
+                        $(this).removeAttr("style");
+                        $(this).text(
+                            recents[i][0].replace("_", " ") + ", " +
+                            recents[i][1] + ", " +
+                            recents[i][2]
+                        );
+                    }
+
                 });
 
+                
+                $(".recent").click(function(){
+                    var index = $(".recent").index(this)
+                    populateFields(recents[index][0].replace(" ","_"), recents[index][1], recents[index][2]);
+                });
+
+                function populateFields( material, waste_method, quantity){
+                    
+                    Material(material);
+                    $("select[name=material]").val(material).change();
+
+                    $("input[name=quantity]").val(quantity).change();
+
+                    WasteMedthodSelected(material, waste_method);
+                    $("select[name=waste_method]").val(waste_method).change();
+                }
             });
   </script>
 </head>
@@ -77,9 +103,9 @@
   <center><H1>Welcome to the Food and Recycling page</H1><br></center>
   <div class="form-group" id="recentSection">
   <center><label class="control-label" for="Recent_id">Recent</label><br>
-  <li id="recent0"><%=recents[0].split('_').join(' ')%></li>
-  <li id="recent1"><%=recents[1].split('_').join(' ')%></li>
-  <li id="recent2"><%=recents[2].split('_').join(' ')%></li>
+  <li class="recent" style="display:none"></li>
+  <li class="recent" style="display:none"></li>
+  <li class="recent" style="display:none"></li>
   </center>
   </div><br>
   

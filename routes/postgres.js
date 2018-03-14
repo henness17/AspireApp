@@ -54,7 +54,14 @@ module.exports = function(app){
     pg.connect(connect, function(err, client, done){
       client.query("SELECT * FROM public.user_foodrecycle WHERE social_id=$1", [socialId], function(err, result){
         done();
-        callback(result.rows[0].recents);
+        var recents = {};
+        if(result.rows.length > 0){
+            for(var i = 0; i < result.rows.length; i++){
+                recents[i] = result.rows[i].recents;
+            }
+        }
+        callback(JSON.stringify(recents));
+        
       }); 
     });
   };
