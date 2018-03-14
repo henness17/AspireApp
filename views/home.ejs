@@ -1,100 +1,95 @@
 <html>
 <head>
-  <% include partials/bootstrap %>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
-  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <% include css/general %>
-  
-  <style>
-    html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
-  </style>
+    <% include partials/bootstrap %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <% include css/general %>
+
+    <style>
+        html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
+    </style>
 </head>
 <body>
-  <% include partials/navbar %>
+    <% include partials/navbar %>
 
-  <div class="w3-card w3-round w3-white">
-    <div class="w3-container">
-     <h4 class="w3-center"><%= user.displayName %></h4>
-     <p class="w3-center"><img src="https://api.adorable.io/avatar/285/<%= user.displayName %>" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
-     <hr>
-     <p>
-      <div class="progress">
-        <% var progress = (savings/10 - Math.floor(savings/10)) * 100 %>
-        <div class="progress-bar progress-bar-striped" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">Level <%= Math.floor(savings / 10) %></div>
-      </div>
-     </p>
-     <p>
-       <div class="progress">
-        <div class="progress-bar progress-bar-success" role="progressbar" style="width:40%">
-          Transportation (40%)
+    <div class="w3-card w3-round w3-white">
+        <div class="w3-container">
+            <h4 class="w3-center"><%= user.displayName %></h4>
+            <p class="w3-center"><img src="https://api.adorable.io/avatar/285/<%= user.displayName %>" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
+            <hr>
+            <p>
+                <div class="progress">
+                    <% var progress = (savings/10 - Math.floor(savings/10)) * 100 %>
+                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">Level <%= Math.floor(savings / 10) %></div>
+                </div>
+            </p>
+            <p>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success" role="progressbar" style="width:40%">
+                        Transportation (40%)
+                    </div>
+                    <div class="progress-bar progress-bar-warning" role="progressbar" style="width:40%">
+                        Food/Recycle (40%)
+                    </div>
+                    <div class="progress-bar progress-bar-info" role="progressbar" style="width:20%">
+                        Housing (20%)
+                    </div>
+                </div>
+            </p>
+            <p>
+                You've saved <%= savings %> pounds of carbon dioxide!
+            </p>
         </div>
-        <div class="progress-bar progress-bar-warning" role="progressbar" style="width:40%">
-          Food/Recycle (40%)
-        </div>
-        <div class="progress-bar progress-bar-info" role="progressbar" style="width:20%">
-          Housing (20%)
-        </div>
-       </div>
-     </p>
-     <p>You've saved <%= savings %> pounds of carbon dioxide!</p>
     </div>
-  </div>
-
-  <%
-  for(var i = 0; i < 10; i++){%>
+    <%for(var i = 0; i < 10; i++){%>
     <div class="w3-col m7">
-      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-        <img src="https://api.adorable.io/avatar/285/<%= JSON.parse(stream)[i].actor; %>" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
-        <span class="w3-right w3-opacity"> <%= timeSince(new Date(JSON.parse(stream)[i].time)) %>  ago</span>
-        <h4><%= JSON.parse(stream)[i].actor; %></h4><br>
-        <hr class="w3-clear">
-        <p><%= JSON.parse(stream)[i].message; %></p>
-      </div>  
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+            <img src="https://api.adorable.io/avatar/285/<%= JSON.parse(stream)[i].actor; %>" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+            <span class="w3-right w3-opacity"> <%= timeSince(new Date(JSON.parse(stream)[i].time)) %>  ago</span>
+            <h4><%= JSON.parse(stream)[i].actor; %></h4><br>
+            <hr class="w3-clear">
+            <p><%= JSON.parse(stream)[i].message; %></p>
+        </div>  
     </div>
-  <%}%> 
-  %>
-
-<!-- 
-	Used for the Activity feed timestamp
--->
+    <%}%>
+    
+<!-- Used for the Activity feed timestamp -->
 <%
-  function timeSince(date) {
+    function timeSince(date) {
+        var seconds = Math.floor((new Date() - date) / 1000);
+        var interval = Math.floor(seconds / 31536000);
 
-  var seconds = Math.floor((new Date() - date) / 1000);
-
-  var interval = Math.floor(seconds / 31536000);
-
-  if (interval > 1) {
-    return interval + " years";
-  }
-  interval = Math.floor(seconds / 2592000);
-  if (interval > 1) {
-    return interval + " months";
-  }
-  interval = Math.floor(seconds / 86400);
-  if (interval > 1) {
-    return interval + " days";
-  }
-  interval = Math.floor(seconds / 3600);
-  if (interval > 1) {
-    return interval + " hours";
-  }
-  interval = Math.floor(seconds / 60);
-  if (interval > 1) {
-    return interval + " minutes";
-  }
-  return Math.floor(seconds) + " seconds";
-}
+        if (interval > 1) {
+            return interval + " years";
+        }
+        interval = Math.floor(seconds / 2592000);
+        if (interval > 1) {
+            return interval + " months";
+        }
+        interval = Math.floor(seconds / 86400);
+        if (interval > 1) {
+            return interval + " days";
+        }
+        interval = Math.floor(seconds / 3600);
+        if (interval > 1) {
+            return interval + " hours";
+        }
+        interval = Math.floor(seconds / 60);
+        if (interval > 1) {
+            return interval + " minutes";
+        }
+        return Math.floor(seconds) + " seconds";
+    }
 %>
 
 </body>
-<script type="text/javascript">
-  $(document).ready(function() {
-    $( ".home" ).addClass( "active" );
-  });
-</script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $( ".home" ).addClass( "active" );
+        });
+    </script>
 </html>
