@@ -60,13 +60,13 @@
             		$( ".foodrecycle" ).addClass( "active" );
                   
                 $("#recent0").click(function(){
-                  $("select[name=material]").val('<%=recents[0]%>').change();
+                  $("select[name=material]").val('<%=recents[0]%>'.split(' ').join('_')).change();
                 });
                 $("#recent1").click(function(){
-                  $("select[name=material]").val("<%=recents[1]%>").change();
+                  $("select[name=material]").val("<%=recents[1]%>".split(' ').join('_')).change();
                 });
                 $("#recent2").click(function(){
-                  $("select[name=material]").val("<%=recents[2]%>").change();
+                  $("select[name=material]").val("<%=recents[2]%>".split(' ').join('_')).change();
                 });
 
             });
