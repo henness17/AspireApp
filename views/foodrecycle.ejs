@@ -33,7 +33,7 @@
                     Material($(this).find("option:selected").val());
                 });
                 $("select[name=waste_method]").change(function(){
-                    WasteMedthodSelected($("select[name=material]").find("option:selected").val(), $(this).find("option:selected").val());
+                    WasteMethodSelected($("select[name=material]").find("option:selected").val(), $(this).find("option:selected").val());
                 });
                 function Material(selectedTxt){
                     // Remove all options in the rest of the select lists
@@ -46,10 +46,10 @@
                             $("select[name=waste_method]").append($('<option></option>').val(waste_methods[i]).html(waste_methods[i].replace("_"," ")));
                         }
                         
-                        WasteMedthodSelected(selectedTxt, waste_methods[0]);
+                        WasteMethodSelected(selectedTxt, waste_methods[0]);
                     }
                 }
-                function WasteMedthodSelected(MaterialTxt, selectedTxt){
+                function WasteMethodSelected(MaterialTxt, selectedTxt){
                     var constant = data.Materials[MaterialTxt].Waste_Method[selectedTxt];
                     if($("input[name=quantity]").val() > 0){
                         updateEmissionLbl(constant*$("input[name=quantity]").val());
@@ -95,7 +95,7 @@
 
                     $("input[name=quantity]").val(quantity).change();
 
-                    WasteMedthodSelected(material, waste_method);
+                    WasteMethodSelected(material, waste_method);
                     $("select[name=waste_method]").val(waste_method).change();
                 }
             });
