@@ -9,12 +9,11 @@
         .box {
             padding: 5px;
             border: 1px solid black; 
-            width:33%; 
+            width:50%;
             min-width: 125px;
             min-height: 85;
-            float:left;
+            float:center;
             margin: 1px;
-            display: inline-block;
         }
         </style>
 		<script type="text/javascript">
@@ -227,7 +226,9 @@
         <% include partials/navbar %>
         <center><h1><b>Settings page</b></h1></center>
         <hr>
-		<form action="/post-user-transportation-settings" method="post" id="settingsform">
+        <form action="/post-user-transportation-settings" method="post" id="settingsform">
+            <div>
+            <center>
             <div class="form-group box">
                 <center><i class='glyphicon glyphicon-menu-right' id="dispTransport"></i><label class="control-label" for="transportation_id">Transportation</label></center><br>
                 
@@ -267,7 +268,9 @@
                 </div>
             </div>
 			<br>
-			<center><input class="btn btn-primary" name="submit" type="submit" style="width: 100%"></center>
+            <input class="btn btn-primary" name="submit" type="submit" style="width: 50%">
+            </center>
+            </div>
 		</form>
 	</body>
 </html>
