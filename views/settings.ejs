@@ -228,48 +228,49 @@
         <hr>
         <form action="/post-user-transportation-settings" method="post" id="settingsform">
             <div>
-            <center>
-            <div class="form-group box">
-                <center><i class='glyphicon glyphicon-menu-right' id="dispTransport"></i><label class="control-label" for="transportation_id">Transportation</label></center><br>
-                
-                <div id="transportOptions" style="display: none">
-                    <label class="control-label transportOptions" for="year_id">Year</label><br>
-                    <select class="form-control transportOptions" id="year_id" name="year" form="settingsform" style="width:100%"></select><br>
-
-                    <label class="control-label transportOptions" for="make_id">Make</label><br>
-                    <select class="form-control transportOptions" id="make_id" name="make" form="settingsform" style="width:100%"></select><br>
-
-                    <label class="control-label transportOptions" for="model_id">Model</label><br>				
-                    <select class="form-control transportOptions" for="model_id" name="model" form="settingsform" style="width:100%"></select><br>
-
-                    <label class="control-label transportOptions" for="transmission_id">Transmission</label><br>	
-                    <select class="form-control transportOptions" id="transmission_id" name="transmission" form="settingsform" style="width:100%"></select><br>
-
-                    <label class="control-label transportOptions" for="engine_id">Engine</label><br>
-                    <select class="form-control transportOptions" for="engine_id" name="engine" form="settingsform" style="width:100%"></select><br>
-
-                    <div id="aspirationDisp" style="display:none">
-                        <label class="control-label" for="aspiration_id">Aspiration</label><br>
-                        <select class="form-control" id="aspiration_id" name="aspiration" form="settingsform" style="width:100%"></select><br>	
+                <center>
+                    <div class="form-group box">
+                        <center><label class="control-label" for="conversion_id" >Conversion</label></center><br>
+                        <select class="form-control" id="conversion_id" name="conversion" form="settingsform" style="width:100%"></select><br>
                     </div>
+                    <div class="form-group box">
+                        <center><i class='glyphicon glyphicon-menu-right' id="dispTransport"></i><label class="control-label" for="transportation_id">Transportation</label></center><br>
+                        
+                        <div id="transportOptions" style="display: none">
+                            <label class="control-label transportOptions" for="year_id">Year</label><br>
+                            <select class="form-control transportOptions" id="year_id" name="year" form="settingsform" style="width:100%"></select><br>
 
-                    <label class="control-label transportOptions" name="carOutputLabel">...</label>
-                    <input class="form-control transportOptions" type="text" Readonly="readonly" style="display:none" name="car_output" form="settingsform">
-                </div>
-            </div>
-            <div class="form-group box">
-                <center><label class="control-label" for="conversion_id" >Conversion</label></center><br>
-                <select class="form-control" id="conversion_id" name="conversion" form="settingsform" style="width:100%"></select><br>
-            </div>
-            <div class="form-group box">
-                <center><i class='glyphicon glyphicon-menu-right' id="dispHousing"></i><label class="control-label" for="housing_id" >Housing</label></center><br>
-                <div id="houseOptions" style="display: none">
+                            <label class="control-label transportOptions" for="make_id">Make</label><br>
+                            <select class="form-control transportOptions" id="make_id" name="make" form="settingsform" style="width:100%"></select><br>
 
-                </div>
-            </div>
-			<br>
-            <input class="btn btn-primary" name="submit" type="submit" style="width: 50%">
-            </center>
+                            <label class="control-label transportOptions" for="model_id">Model</label><br>				
+                            <select class="form-control transportOptions" for="model_id" name="model" form="settingsform" style="width:100%"></select><br>
+
+                            <label class="control-label transportOptions" for="transmission_id">Transmission</label><br>	
+                            <select class="form-control transportOptions" id="transmission_id" name="transmission" form="settingsform" style="width:100%"></select><br>
+
+                            <label class="control-label transportOptions" for="engine_id">Engine</label><br>
+                            <select class="form-control transportOptions" for="engine_id" name="engine" form="settingsform" style="width:100%"></select><br>
+
+                            <div id="aspirationDisp" style="display:none">
+                                <label class="control-label" for="aspiration_id">Aspiration</label><br>
+                                <select class="form-control" id="aspiration_id" name="aspiration" form="settingsform" style="width:100%"></select><br>	
+                            </div>
+
+                            <label class="control-label transportOptions" name="carOutputLabel">...</label>
+                            <input class="form-control transportOptions" type="text" Readonly="readonly" style="display:none" name="car_output" form="settingsform">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group box">
+                        <center><i class='glyphicon glyphicon-menu-right' id="dispHousing"></i><label class="control-label" for="housing_id" >Housing</label></center><br>
+                        <div id="houseOptions" style="display: none">
+
+                        </div>
+                    </div>
+                    <br>
+                    <input class="btn btn-primary" name="submit" type="submit" style="width: 50%">
+                </center>
             </div>
 		</form>
 	</body>
