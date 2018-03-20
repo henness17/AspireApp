@@ -36,7 +36,7 @@
                         {
                             $("select[name=waste_method]").append($('<option></option>').val(waste_methods[i]).html(waste_methods[i].replace("_"," ")));
                         }
-                        
+                        $('input[name=type]').val(data.Materials[selectedTxt].Type);
                         WasteMethodSelected(selectedTxt, waste_methods[0]);
                     }
                 }
@@ -57,6 +57,9 @@
                 });
                 function updateEmissionLbl(value){
                     $('label[name=emissionsLabel]').text(value + " lbs CO2 net emission");
+                    $('input[name=emissions]').val(value);
+
+                    
                 }
     
                 $( ".foodrecycle" ).addClass( "active" );
@@ -116,6 +119,9 @@
 
                 <label class="control-label" name="emissionsLabel">...</label>
                 <input type="text" Readonly="readonly" style="display:none" name="emissions" form="foodrecycleform">
+                
+                <input type="text" Readonly="readonly" style="display:none" name="type" form="foodrecycleform">
+            
             </div>
             <input class="btn btn-primary" name="submit" type="submit">
         </center>

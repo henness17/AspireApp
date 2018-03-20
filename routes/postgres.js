@@ -52,9 +52,9 @@ module.exports = function(app){
 
   var GetUserRecentsById = function GetUserRecentsById(socialId, callback){
     pg.connect(connect, function(err, client, done){
-        var query = "(SELECT 'time' as option, ROW_NUMBER() OVER (ORDER BY datetime) AS row, MATERIAL, WASTE_METHOD FROM public.user_foodrecycle WHERE social_id=$1 ORDER BY datetime ASC LIMIT 5)"
+        var query = "(SELECT 'time' as option, ROW_NUMBER() OVER (ORDER BY datetime) AS row, MATERIAL, WASTE_METHOD FROM public.user_foodrecycle_savings WHERE social_id=$1 ORDER BY datetime DESC LIMIT 5)"
                     + "UNION" +
-                    "(SELECT 'popularity' as option, COUNT(*) as row, MATERIAL, WASTE_METHOD FROM public.user_foodrecycle WHERE social_id=$1 GROUP BY MATERIAL, WASTE_METHOD ORDER BY row DESC LIMIT 5)"; 
+                    "(SELECT 'popularity' as option, COUNT(*) as row, MATERIAL, WASTE_METHOD FROM public.user_foodrecycle_savings WHERE social_id=$1 GROUP BY MATERIAL, WASTE_METHOD ORDER BY row DESC LIMIT 5)"; 
       client.query(query, [socialId], function(err, result){
         done();
         var recents = {"popularity":[],"time":[]};
@@ -98,7 +98,7 @@ module.exports = function(app){
   var PostUserBySocialId = function PostUserBySocialId(socialId, callback){
     pg.connect(connect, function(err, client, done){
       client.query("INSERT INTO public.user (social_id) VALUES ($1)", [socialId], function(err, result){
-        client.query("INSERT INTO public.user_foodrecycle (social_id) VALUES ($1)", [socialId], function(err, result){
+        client.query("INSERT INTO public.user_foodrecycle_savings (social_id) VALUES ($1)", [socialId], function(err, result){
           done();
           callback();
         });
@@ -119,25 +119,15 @@ module.exports = function(app){
 
   var PostUserFoodRecycle = function PostUserFoodRecycle(socialId, formResults, callback){
     pg.connect(connect, function(err, client, done){
-      client.query("INSERT INTO public.user_savings (social_id,type,saved,worst_case) VALUES ($1,$2,$3,$4)", 
+      client.query("INSERT INTO public.user_foodrecycle_savings (social_id,type,material,waste_method,quantity,savings) VALUES ($1,$2,$3,$4,$5,$6)", 
       [socialId,
         formResults.type,
-        formResults.saved,
-        formResults.worst_case], function(err, result){
+        formResults.material,
+        formResults.waste_method,
+        formResults.quantity,
+        formResults.emissions], function(err, result){
           done();
-          callback(formResults); // Will need to pass formResults back to populate stream
-      }); 
-
-      // Bump recents list if needed
-      client.query("SELECT * FROM public.user_foodrecycle WHERE social_id=$1", [socialId], function(err, result){
-          var recents = result.rows[0].recents;
-          var newRecents = [formResults.material, formResults.waste_method, formResults.quantity];
-          if(recents.indexOf(formResults.material) == -1){
-            client.query("UPDATE public.user_foodrecycle SET recents=$1 WHERE social_id=$2", [newRecents, socialId], function(err, result){
-              done();
-            }); 
-          }
-          done();
+          callback();
       }); 
     });
   };

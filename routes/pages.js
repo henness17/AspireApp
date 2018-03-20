@@ -66,13 +66,11 @@ module.exports = function(app){
   });
 
   app.post('/post-user-foodrecycle', function(req, res){
+    console.log(JSON.stringify(req.body));
     postgres.PostUserFoodRecycle(req.user.id, req.body, callback);
-    function callback(formResults){
-      // Send information to stream
-      postgres.UpdateAddUserTotalSavings(req.user.id, formResults.saved, callback2);
-      function callback2(){
+    function callback(){
         res.redirect('/');
-      }
+      
     }
   });
 
