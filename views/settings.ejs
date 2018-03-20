@@ -23,9 +23,6 @@
 				// to convert the select lists to searchable drop down lists
 				$('select').select2();
 
-				// Adds a dummy option indicating the user to select a year
-				$("select[name=year]").append($('<option></option>').val("-1").html("Please select a year"));
-
 				for (var i=1998;i<=2018;i++) {
 					$("select[name=year]").append($('<option></option>').val(i).html(i));
 				}
@@ -36,23 +33,23 @@
 				// Check if the user has a car saved into the database
 				if(userSettings.rows.length > 0){
 					yearSelected(userSettings.rows[0].year);
-					$("select[name=year]").val(userSettings.rows[0].year);
+					$("select[name=year]").val(userSettings.rows[0].year).change();
 
 					makeSelected(userSettings.rows[0].year, userSettings.rows[0].make);
-					$("select[name=make]").val(userSettings.rows[0].make);
+					$("select[name=make]").val(userSettings.rows[0].make).change();
 
 					modelSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model);
-					$("select[name=model]").val(userSettings.rows[0].model);
+					$("select[name=model]").val(userSettings.rows[0].model).change();
 
 					transmissionSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission);
-					$("select[name=transmission]").val(userSettings.rows[0].transmission);
+					$("select[name=transmission]").val(userSettings.rows[0].transmission).change();
 
 					engineSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission, userSettings.rows[0].engine);
-					$("select[name=engine]").val(userSettings.rows[0].engine);				
+					$("select[name=engine]").val(userSettings.rows[0].engine).change();				
 
 					if(userSettings.rows[0].engine != "Electric"){
 						aspirationSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission, userSettings.rows[0].engine, userSettings.rows[0].aspiration);
-						$("select[name=aspiration]").val(userSettings.rows[0].aspiration);
+						$("select[name=aspiration]").val(userSettings.rows[0].aspiration).change();
 					}
 				}
 
@@ -238,7 +235,9 @@
                         
                         <div id="transportOptions" style="display: none">
                             <label class="control-label transportOptions" for="year_id">Year</label><br>
-                            <select class="form-control transportOptions" id="year_id" name="year" form="settingsform" style="width:100%"></select><br>
+                            <select class="form-control transportOptions" id="year_id" name="year" form="settingsform" style="width:100%">
+                                <option value="-1">Please select a year</option>
+                            </select><br>
 
                             <label class="control-label transportOptions" for="make_id">Make</label><br>
                             <select class="form-control transportOptions" id="make_id" name="make" form="settingsform" style="width:100%"></select><br>

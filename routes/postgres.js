@@ -52,17 +52,26 @@ module.exports = function(app){
 
   var GetUserRecentsById = function GetUserRecentsById(socialId, callback){
     pg.connect(connect, function(err, client, done){
-      client.query("SELECT * FROM public.user_foodrecycle WHERE social_id=$1", [socialId], function(err, result){
+        var query = "(SELECT 'time' as option, ROW_NUMBER() OVER (ORDER BY datetime) AS row, MATERIAL, WASTE_METHOD FROM public.user_foodrecycle WHERE social_id=$1 ORDER BY datetime ASC LIMIT 5)"
+                    + "UNION" +
+                    "(SELECT 'popularity' as option, COUNT(*) as row, MATERIAL, WASTE_METHOD FROM public.user_foodrecycle WHERE social_id=$1 GROUP BY MATERIAL, WASTE_METHOD ORDER BY row DESC LIMIT 5)"; 
+      client.query(query, [socialId], function(err, result){
         done();
-        var recents = {};
-        if(result.rows.length > 0){
-            for(var i = 0; i < result.rows.length; i++){
-                recents[i] = result.rows[i].recents;
+        var recents = {"popularity":[],"time":[]};
+        console.log("\n\n\n\n\n" + JSON.stringify(result.rows) + "\n\n\n\n\n");
+        result.rows.forEach(element => {
+            var newArr = {"material":element.material, "waste_method":element.waste_method};
+            if(element.option == "popularity"){
+                recents.popularity.push(newArr);
+            }else if(element.option == "time"){
+                recents.time.push(newArr);
             }
-        }
+        });
+        //console.log(JSON.stringify(recents) + "\n\n\n\n\n");
+
         callback(JSON.stringify(recents));
         
-      }); 
+      });
     });
   };
   module.exports.GetUserRecentsById = GetUserRecentsById;

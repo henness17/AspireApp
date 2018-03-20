@@ -3,14 +3,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <% include partials/bootstrap %>
         <% include css/general %>
-        <style>
-            .recent{
-                cursor: pointer;
-                border: 1px solid black;
-                list-style: none;
-                margin-bottom: 2px;
-            }
-        </style>
         <script type="text/javascript">
             // Check if the page is loaded and ready
             $(document).ready(function() {
@@ -23,7 +15,7 @@
                 
                 var materials = Object.keys(data.Materials);
                 // Adds a dummy option indicating the user to select a year
-                $("select[name=material]").append($('<option></option>').val("-1").html("Please select a material"));
+                //$("select[name=material]").append($('<option></option>').val("-1").html("Please select a material"));
                 for (var i=0;i < materials.length;i++)
                 {
                     $("select[name=material]").append($('<option></option>').val(materials[i]).html(materials[i].replace("_"," ")));
@@ -70,68 +62,64 @@
     
                 $( ".foodrecycle" ).addClass( "active" );
                 
-                $(".recent").each(function(i,obj){
-                    if(!jQuery.isEmptyObject(recents) && i < Object.keys(recents).length){
-                        $(this).removeAttr("style");
-                        $(this).text(
-                            recents[i][0].replace("_", " ") + ", " +
-                            recents[i][1] + ", " +
-                            recents[i][2]
-                        );
-                    }
-
-                });
-
-                
-                $(".recent").click(function(){
-                    var index = $(".recent").index(this)
-                    populateFields(recents[index][0].replace(" ","_"), recents[index][1], recents[index][2]);
-                });
-
-                function populateFields( material, waste_method, quantity){
+                $("input[name=option]").change(function(){
+                    $("#RecentList option").not(':first').remove();
                     
-                    Material(material);
-                    $("select[name=material]").val(material).change();
+                    recents[$(this).val()].forEach(function(element, index) {
+                        var option = element.material.replace("_"," ") + ", " + element.waste_method;
+                        $("#RecentList").append($("<option/>", {
+                            value: index,
+                            text: option
+                        }));
+                    });
+                    
+                });
 
-                    $("input[name=quantity]").val(quantity).change();
+                $("#RecentList").change(function(){
+                    var index = $(this).val();
+                    if(index != -1){
+                        var option = $('input[name=option]:checked').val();
+                        $("select[name=material]").val(recents[option][index].material).change();
+                        Material(recents[option][index].material);
+                        $("select[name=waste_method]").val(recents[option][index].waste_method).change();               
+                        WasteMethodSelected(recents[option][index].material, recents[option][index].waste_method);
+                    }
+                });
 
-                    WasteMethodSelected(material, waste_method);
-                    $("select[name=waste_method]").val(waste_method).change();
-                }
             });
   </script>
 </head>
 <body>
-  <% include partials/navbar %>
-  <center><H1>Welcome to the Food and Recycling page</H1><br></center>
-  <div class="form-group" id="recentSection">
-    <center>
-        <div style="width:50%">
-            <label class="control-label" for="Recent_id">Recent</label><br>
-            <li class="recent" style="display:none"></li>
-            <li class="recent" style="display:none"></li>
-            <li class="recent" style="display:none"></li>
-        </div>
-    </center>
-  </div><br>
-  
-  <form action="/post-user-foodrecycle" method="post" id="foodrecycleform">
-  <center>
-  <div class="form-group">
-    <label class="control-label" for="material_id">Material</label><br>
-    <select class="form-control" id="material_id" name="material" form="foodrecycleform" style="width:120px"></select><br>
+    <% include partials/navbar %>
+    <center><H1>Welcome to the Food and Recycling page</H1><br></center>
+    <div class="form-group" id="recentSection">
+        <center>
+            <label class="control-label" for="Recent_id">Autofill</label><br>
+            <input type="radio" name="option" value="time">Time</input>
+            <input type="radio" name="option" value="popularity">Popularity</input><br>
+            <select class="form-control" for="Recent_id" id="RecentList" style="width:80%"><option value="-1">Select an option to autofill</option></select><br>
+        </center>
+    </div><br>
 
-    <label class="control-label" for="waste_method_id">Waste Method</label><br>
-    <select class="form-control" id="waste_method_id" name="waste_method" form="foodrecycleform" style="width:120px"></select><br>
+    <form action="/post-user-foodrecycle" method="post" id="foodrecycleform">
+        <center>
+            <div class="form-group">
+                <label class="control-label" for="material_id">Material</label><br>
+                <select class="form-control" for="material_id" id="material_id" name="material" form="foodrecycleform" style="width:80%">
+                    <option value="-1">Please select a material</option>
+                </select><br>
 
-    <label class="control-label" for="quantity_id">Quantity</label><br>				
-    <input class="form-control" for="quantity_id" type="number" min="1" name="quantity" form="foodrecycleform" style="width:120px"></input><br>
-    
-    <label class="control-label" name="emissionsLabel">...</label>
-    <input type="text" Readonly="readonly" style="display:none" name="emissions" form="foodrecycleform">
-  </div>
-  <input class="btn btn-primary" name="submit" type="submit">
-  </center>
-</form>
+                <label class="control-label" for="waste_method_id">Waste Method</label><br>
+                <select class="form-control" for="waste_method_id" id="waste_method_id" name="waste_method" form="foodrecycleform" style="width:80%"></select><br>
+
+                <label class="control-label" for="quantity_id">Quantity</label><br>				
+                <input class="form-control" for="quantity_id" type="number" min="1" name="quantity" form="foodrecycleform" style="width:80%"></input><br>
+
+                <label class="control-label" name="emissionsLabel">...</label>
+                <input type="text" Readonly="readonly" style="display:none" name="emissions" form="foodrecycleform">
+            </div>
+            <input class="btn btn-primary" name="submit" type="submit">
+        </center>
+    </form>
 </body>
 </html>
