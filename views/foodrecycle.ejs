@@ -14,8 +14,7 @@
                 recents = JSON.parse(recents);
                 
                 var materials = Object.keys(data.Materials);
-                // Adds a dummy option indicating the user to select a year
-                //$("select[name=material]").append($('<option></option>').val("-1").html("Please select a material"));
+
                 for (var i=0;i < materials.length;i++)
                 {
                     $("select[name=material]").append($('<option></option>').val(materials[i]).html(materials[i].replace("_"," ")));
@@ -53,7 +52,7 @@
                         var constant = data.Materials[$("select[name=material]").find("option:selected").val()].Waste_Method[$("select[name=waste_method]").find("option:selected").val()];
                         if(constant != null){
                             updateEmissionLbl(constant*$(this).val());
-                        } 
+                        }
                     }
                 });
                 function updateEmissionLbl(value){
@@ -95,8 +94,8 @@
     <div class="form-group" id="recentSection">
         <center>
             <label class="control-label" for="Recent_id">Autofill</label><br>
-            <input type="radio" name="option" value="time">Time</input>
-            <input type="radio" name="option" value="popularity">Popularity</input><br>
+            <input type="radio" name="option" value="time">Recent</input>
+            <input type="radio" name="option" value="popularity">Popular</input><br>
             <select class="form-control" for="Recent_id" id="RecentList" style="width:80%"><option value="-1">Select an option to autofill</option></select><br>
         </center>
     </div><br>

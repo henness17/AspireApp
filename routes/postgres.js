@@ -58,7 +58,6 @@ module.exports = function(app){
       client.query(query, [socialId], function(err, result){
         done();
         var recents = {"popularity":[],"time":[]};
-        console.log("\n\n\n\n\n" + JSON.stringify(result.rows) + "\n\n\n\n\n");
         result.rows.forEach(element => {
             var newArr = {"material":element.material, "waste_method":element.waste_method};
             if(element.option == "popularity"){
@@ -67,7 +66,6 @@ module.exports = function(app){
                 recents.time.push(newArr);
             }
         });
-        //console.log(JSON.stringify(recents) + "\n\n\n\n\n");
 
         callback(JSON.stringify(recents));
         
