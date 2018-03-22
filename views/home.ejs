@@ -11,6 +11,7 @@
 
     <style>
         html,body,h1,h2,h3,h4,h5 {font-family: "Open Sans", sans-serif}
+        html { margin-bottom: 50px; }
     </style>
 </head>
 <body>
@@ -55,9 +56,9 @@
             </div>  
         </div>
     <%}%>
-    
-<!-- Used for the Activity feed timestamp -->
 <%
+    // Used for the Activity feed timestamp
+
     function timeSince(date) {
         var seconds = Math.floor((new Date() - date) / 1000);
         var interval = Math.floor(seconds / 31536000);

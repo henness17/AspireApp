@@ -5,7 +5,10 @@
 		<% include partials/bootstrap %>
 		<% include css/general %>
 
-        <style>
+		<style>
+		html { 
+                margin-bottom: 50px;
+        }
         .box {
             padding: 5px;
             border: 1px solid black; 
@@ -30,28 +33,7 @@
 				var data = <%- JSON.stringify(transportationJson); %>
 				var userSettings = <%- JSON.stringify(userSettingsJson); %>
 
-				// Check if the user has a car saved into the database
-				if(userSettings.rows.length > 0){
-					yearSelected(userSettings.rows[0].year);
-					$("select[name=year]").val(userSettings.rows[0].year).change();
-
-					makeSelected(userSettings.rows[0].year, userSettings.rows[0].make);
-					$("select[name=make]").val(userSettings.rows[0].make).change();
-
-					modelSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model);
-					$("select[name=model]").val(userSettings.rows[0].model).change();
-
-					transmissionSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission);
-					$("select[name=transmission]").val(userSettings.rows[0].transmission).change();
-
-					engineSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission, userSettings.rows[0].engine);
-					$("select[name=engine]").val(userSettings.rows[0].engine).change();				
-
-					if(userSettings.rows[0].engine != "Electric"){
-						aspirationSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission, userSettings.rows[0].engine, userSettings.rows[0].aspiration);
-						$("select[name=aspiration]").val(userSettings.rows[0].aspiration).change();
-					}
-				}
+				
 
 
 				// Change functions to handle user actions of each of the select statements
@@ -214,7 +196,32 @@
                         $(arrowDisp).removeClass("glyphicon-menu-down");
                         $(arrowDisp).addClass("glyphicon-menu-right");
                     }
-                }
+				}
+				
+
+				// Check if the user has a car saved into the database
+				if(userSettings.rows.length > 0){
+					yearSelected(userSettings.rows[0].year);
+					$("select[name=year]").val(userSettings.rows[0].year).change();
+
+					makeSelected(userSettings.rows[0].year, userSettings.rows[0].make);
+					$("select[name=make]").val(userSettings.rows[0].make).change();
+
+					modelSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model);
+					$("select[name=model]").val(userSettings.rows[0].model).change();
+
+					transmissionSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission);
+					$("select[name=transmission]").val(userSettings.rows[0].transmission).change();
+
+					engineSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission, userSettings.rows[0].engine);
+					$("select[name=engine]").val(userSettings.rows[0].engine).change();				
+
+					if(userSettings.rows[0].engine != "Electric"){
+						aspirationSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission, userSettings.rows[0].engine, userSettings.rows[0].aspiration);
+						$("select[name=aspiration]").val(userSettings.rows[0].aspiration).change();
+					}
+				}
+
 			});
 		</script>
 	</head>
