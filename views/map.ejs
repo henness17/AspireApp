@@ -155,7 +155,6 @@
                 }
                 var origin_place_id = null;
                 var destination_place_id = null;
-                var travel_mode = google.maps.TravelMode.DRIVING;
                 var map = new google.maps.Map(document.getElementById('map'), {
                 mapTypeId: 'roadmap',
                 mapTypeControl: false,
@@ -303,7 +302,7 @@
                         }
                     });
                 }
-                var carbonOutObj = {};
+                var carbonOutObj = {worst_mode:"DRIVING"};
                 function populatePopup(response, travelmode) {
                 var costPerMile, fare, time, money, distance, distMeters, carbonOut;
                 var milesPerMeter = 0.000621371;
@@ -348,32 +347,44 @@
                         document.getElementById("cost_walking_carbon").innerHTML= carbonOut + " lbs" ;
                         break;
                 }
+                
                 carbonOutObj[travelmode] = carbonOut;
+                
+                if(carbonOut > carbonOutObj[carbonOutObj.worst_mode]){
+                    carbonOutObj.worst_mode = travelmode;
+                }
+                
                 localStorage.setItem("carbonOutObj", JSON.stringify(carbonOutObj));
                 }
             }
             function selectTransportation(travelMode){
                 carbonOutObj = JSON.parse(localStorage.getItem("carbonOutObj"));
+                
                 if (confirm("Would you like to take the "+ travelMode.toLowerCase() +" route?")) {
                     var form = document.createElement("form");
                     var saved = document.createElement("input"); 
-                    var worst_case = document.createElement("input");  
                     var type = document.createElement("input");  
+                    var worst_case_type = document.createElement("input");
+                    var worst_case_value = document.createElement("input");
 
                     form.method = "POST";
                     form.action = "/post-user-transportation";   
 
-                    saved.value=carbonOutObj.DRIVING - carbonOutObj[travelMode];
+                    saved.value=carbonOutObj[carbonOutObj.worst_mode] - carbonOutObj[travelMode];
                     saved.name="saved";
                     form.appendChild(saved);  
-
-                    worst_case.value=carbonOutObj.DRIVING;
-                    worst_case.name="worst_case";
-                    form.appendChild(worst_case);
 
                     type.value=travelMode;
                     type.name="type";
                     form.appendChild(type);
+
+                    worst_case_type.value=carbonOutObj.worst_mode;
+                    worst_case_type.name="worst_case_type";
+                    form.appendChild(worst_case_type);
+
+                    worst_case_value.value=carbonOutObj[carbonOutObj.worst_mode];
+                    worst_case_value.name="worst_case_value";
+                    form.appendChild(worst_case_value);
 
                     document.body.appendChild(form);
 

@@ -32,7 +32,7 @@ module.exports = function(app){
 
   var GetUserCarOutputById = function GetUserCarOutputById(socialId, callback){
     pg.connect(connect, function(err, client, done){
-      client.query("SELECT * FROM public.user_transportation WHERE social_id=$1", [socialId], function(err, result){
+      client.query("SELECT * FROM public.user_transportation_settings WHERE social_id=$1", [socialId], function(err, result){
         done();
         callback(result);
       }); 
@@ -76,7 +76,7 @@ module.exports = function(app){
 
   var GetUserSettingsBySocialId = function GetUserSettingsBySocialId(socialId, callback){
     pg.connect(connect, function(err, client, done){
-      client.query("SELECT * FROM public.user_transportation WHERE social_id=$1", [socialId], function(err, result){
+      client.query("SELECT * FROM public.user_transportation_settings WHERE social_id=$1", [socialId], function(err, result){
         done();
         callback(result);
       }); 
@@ -109,7 +109,7 @@ module.exports = function(app){
 
   var PostUserSettingsBySocialId = function PostUserSettingsBySocialId(socialId, callback){
     pg.connect(connect, function(err, client, done){
-      client.query("INSERT INTO public.user_transportation (social_id) VALUES ($1)", [socialId], function(err, result){
+      client.query("INSERT INTO public.user_transportation_settings (social_id) VALUES ($1)", [socialId], function(err, result){
         done();
         callback();
       }); 
@@ -144,7 +144,7 @@ module.exports = function(app){
           updateSettings();
         }
         function updateSettings(){
-          client.query("UPDATE public.user_transportation SET " +
+          client.query("UPDATE public.user_transportation_settings SET " +
                       "year=$1,make=$2,model=$3,transmission=$4,engine=$5,aspiration=$6,car_output=$7 WHERE social_id=$8", 
             [formResults.year,
              formResults.make,
@@ -166,14 +166,16 @@ module.exports = function(app){
   var PostUserTransportation = function PostUserTransportation(socialId, formResults, callback){
     var date = new Date();
     pg.connect(connect, function(err, client, done){
-      client.query("INSERT INTO public.user_savings (social_id,type,saved,worst_case) VALUES ($1,$2,$3,$4)", 
+      client.query("INSERT INTO public.user_transportation_savings (social_id,type,saved,worst_case_type,worst_case_value) VALUES ($1,$2,$3,$4,$5)", 
       [socialId,
         formResults.type,
         formResults.saved,
-        formResults.worst_case], function(err, result){
+        formResults.worst_case_type,
+        formResults.worst_case_value], function(err, result){
           done();
           callback(formResults);
         }); 
+      
     });
   };
   module.exports.PostUserTransportation = PostUserTransportation;
