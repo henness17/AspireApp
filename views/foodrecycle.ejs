@@ -57,7 +57,7 @@
                 });
                 function updateEmissionLbl(value){
                     $('label[name=emissionsLabel]').text(value + " lbs CO2 net emission");
-                    $('input[name=emissions]').val(value);
+                    $('input[name=savings]').val(value);
 
                     
                 }
@@ -118,7 +118,7 @@
                 <input class="form-control" for="quantity_id" type="number" min="1" name="quantity" form="foodrecycleform" style="width:80%"></input><br>
 
                 <label class="control-label" name="emissionsLabel">...</label>
-                <input type="text" Readonly="readonly" style="display:none" name="emissions" form="foodrecycleform">
+                <input type="text" Readonly="readonly" style="display:none" name="savings" form="foodrecycleform">
                 
                 <input type="text" Readonly="readonly" style="display:none" name="type" form="foodrecycleform">
             

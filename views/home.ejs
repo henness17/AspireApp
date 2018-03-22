@@ -23,25 +23,24 @@
             <hr>
             <p>
                 <div class="progress">
-                    <% var progress = (savings/10 - Math.floor(savings/10)) * 100 %>
-                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">Level <%= Math.floor(savings / 10) %></div>
+                    <% var progress = (savings.total_savings/10 - Math.floor(savings.total_savings/10)) * 100 %>
+                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">Level <%= Math.floor(savings.total_savings / 10) %></div>
                 </div>
             </p>
             <p>
                 <div class="progress">
-                    <div class="progress-bar progress-bar-success" role="progressbar" style="width:40%">
-                        Transportation (40%)
+                    <div id="transport" class="progress-bar progress-bar-success" role="progressbar">
                     </div>
-                    <div class="progress-bar progress-bar-warning" role="progressbar" style="width:40%">
-                        Food/Recycle (40%)
+                    <div id="foodrecycle" class="progress-bar progress-bar-warning" role="progressbar">
+                        Food/Recycle (0%)
                     </div>
-                    <div class="progress-bar progress-bar-info" role="progressbar" style="width:20%">
-                        Housing (20%)
+                    <div id="housing" class="progress-bar progress-bar-info" role="progressbar">
+                        Housing (0%)
                     </div>
                 </div>
             </p>
             <p>
-                You've saved <%= savings %> pounds of carbon dioxide!
+                You've saved <%= savings.total_savings %> pounds of carbon dioxide!
             </p>
         </div>
     </div>
@@ -89,6 +88,19 @@
 </body>
     <script type="text/javascript">
         $(document).ready(function() {
+            var savings = <%- JSON.stringify(savings); %>
+            var percentage = (savings.transportation_savings / savings.total_savings) * 100;
+            $("#transport").html("Transportation ("+Math.floor(percentage)+"%)");
+            $("#transport").css("width", percentage+"%");
+            
+            percentage = (savings.food_recycle_savings / savings.total_savings) * 100;
+            $("#foodrecycle").html("Food/Recycle ("+Math.floor(percentage)+"%)");
+            $("#foodrecycle").css("width", percentage+"%");
+
+            percentage = (savings.housing_savings / savings.total_savings) * 100;
+            $("#housing").html("Housing ("+Math.floor(percentage)+"%)");
+            $("#housing").css("width", percentage+"%");
+
             $( ".home" ).addClass( "active" );
         });
     </script>

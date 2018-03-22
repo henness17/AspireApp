@@ -84,16 +84,16 @@ module.exports = function(app){
   };
   module.exports.GetUserSettingsBySocialId = GetUserSettingsBySocialId;
 
-  var GetUserTotalSavingsById = function GetUserTotalSavingsById(socialId, callback){
+  var GetUserSavingsById = function GetUserSavingsById(socialId, callback){
     pg.connect(connect, function(err, client, done){
-      client.query("SELECT * FROM public.user WHERE social_id=$1", [socialId], function(err, result){
-        console.log("Queried total savings by id");
+      client.query("SELECT total_savings,transportation_savings,food_recycle_savings,housing_savings FROM public.user WHERE social_id=$1", [socialId], function(err, result){
+        console.log("Queried savings by id");
         done();
-        callback(result.rows[0].total_savings);
+        callback(result.rows[0]);
       }); 
     });
   }
-  module.exports.GetUserTotalSavingsById = GetUserTotalSavingsById;
+  module.exports.GetUserSavingsById = GetUserSavingsById;
  
   var PostUserBySocialId = function PostUserBySocialId(socialId, callback){
     pg.connect(connect, function(err, client, done){
@@ -125,10 +125,18 @@ module.exports = function(app){
         formResults.material,
         formResults.waste_method,
         formResults.quantity,
-        formResults.emissions], function(err, result){
+        formResults.savings], function(err, result){
           done();
           callback();
-      }); 
+      });
+
+      client.query("UPDATE public.user SET " +
+                      "total_savings=total_savings+$1,food_recycle_savings=food_recycle_savings+$1 WHERE social_id=$2", 
+            [formResults.savings,
+             socialId], function(err, result){
+            done();
+          });
+
     });
   };
   module.exports.PostUserFoodRecycle = PostUserFoodRecycle;
@@ -174,26 +182,15 @@ module.exports = function(app){
         formResults.worst_case_value], function(err, result){
           done();
           callback(formResults);
-        }); 
-      
+        });
+
+        client.query("UPDATE public.user SET " +
+                      "total_savings=total_savings+$1,transportation_savings=transportation_savings+$1 WHERE social_id=$2", 
+            [formResults.saved,
+             socialId], function(err, result){
+            done();
+          });
     });
   };
   module.exports.PostUserTransportation = PostUserTransportation;
-
-  var UpdateAddUserTotalSavings = function UpdateAddUserTotalSavings(socialId, addition, callback){
-    pg.connect(connect, function(err, client, done){
-      GetUserTotalSavingsById(socialId, callback2);
-      function callback2(savings){
-        var newSavings = parseFloat(savings) + parseFloat(addition);
-        var newSavings = newSavings.toFixed(2);
-        client.query("UPDATE public.user SET total_savings=$1 WHERE social_id=$2", [newSavings, socialId], 
-          function(err, result){
-            console.log("Updated total savings by id");
-              done();
-              callback();
-          }); 
-      }
-    });
-  }
-  module.exports.UpdateAddUserTotalSavings = UpdateAddUserTotalSavings;
 };
