@@ -56,7 +56,7 @@
                     }
                 });
                 function updateEmissionLbl(value){
-                    $('label[name=emissionsLabel]').text(value + " lbs CO2 net emission");
+                    $('label[name=savingsLabel]').text(value + " lbs CO2E net savings");
                     $('input[name=savings]').val(value);
 
                     
@@ -117,7 +117,7 @@
                 <label class="control-label" for="quantity_id">Quantity</label><br>				
                 <input class="form-control" for="quantity_id" type="number" min="1" name="quantity" form="foodrecycleform" style="width:80%"></input><br>
 
-                <label class="control-label" name="emissionsLabel">...</label>
+                <label class="control-label" name="savingsLabel">...</label>
                 <input type="text" Readonly="readonly" style="display:none" name="savings" form="foodrecycleform">
                 
                 <input type="text" Readonly="readonly" style="display:none" name="type" form="foodrecycleform">
