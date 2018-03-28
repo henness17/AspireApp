@@ -73,12 +73,19 @@ module.exports = function(app){
     });
   };
   module.exports.GetUserRecentsById = GetUserRecentsById;
-
+  
   var GetUserSettingsBySocialId = function GetUserSettingsBySocialId(socialId, callback){
     pg.connect(connect, function(err, client, done){
-      client.query("SELECT * FROM public.user_transportation_settings WHERE social_id=$1", [socialId], function(err, result){
-        done();
-        callback(result);
+      client.query("SELECT aspiration, car_output, engine, make, model, transmission, year FROM public.user_transportation_settings WHERE social_id=$1", [socialId], function(err, result){
+        client.query("SELECT conversion FROM public.user WHERE social_id=$1", [socialId], function(err, result2){
+            done();
+            if(result.rows.length == 0){
+                callback(null);
+            }else{
+                callback(result.rows,result2.rows);
+            }
+            
+          });
       }); 
     });
   };
@@ -145,7 +152,7 @@ module.exports = function(app){
     pg.connect(connect, function(err, client, done){
       GetUserSettingsBySocialId(socialId, callback2);
       function callback2(result){
-        if(result.rows.length == 0){
+        if(result == null){
           PostUserSettingsBySocialId(socialId, updateSettings);
         }else{
           
@@ -162,8 +169,14 @@ module.exports = function(app){
              formResults.aspiration,
              formResults.car_output,
              socialId], function(err, result){
-            done();
-            callback();
+                client.query("UPDATE public.user SET conversion=$1" +
+                " WHERE social_id=$2",
+                    [formResults.conversion,
+                    socialId], function(err, result){
+                        done();
+
+                        callback();
+                    }); 
           }); 
         }
       }

@@ -30,13 +30,22 @@
 					$("select[name=year]").append($('<option></option>').val(i).html(i));
 				}
 
-				var data = <%- JSON.stringify(transportationJson); %>
-				var userSettings = <%- JSON.stringify(userSettingsJson); %>
+				var transportationData = <%- transportationJson; %>
+                var userSettings = <%- JSON.stringify(userSettingsJson); %>
+                var conversions = <%- conversionJson; %>
 
-				
+                var display = Object.keys(conversions.Display_Unit);
+                for (var i=0;i < display.length;i++)
+                {
+                    $("select[name=conversion]").append($('<option></option>').val(display[i]).html(display[i].split('_').join(' ')));
+                }
 
-
-				// Change functions to handle user actions of each of the select statements
+                // Change functions to handle user actions of each of the select statements
+                $("select[name=conversion]").change(function(){
+                    var output = $('input[name=car_output]').val()
+                    fillInOutput(output);
+                });
+                
 				$("select[name=year]").change(function(){
 					yearSelected($(this).find("option:selected").val());
 				});
@@ -73,7 +82,7 @@
 
 					// Added -1 to our dummy option to avoid trying to use it to find JSON values
 					if(selectedTxt != -1){
-						var makes = Object.keys(data.Years[selectedTxt].Makes);
+						var makes = Object.keys(transportationData.Years[selectedTxt].Makes);
 						if(makes.length > 0){
 							for (var i=0;i < makes.length;i++) {
 								$("select[name=make]").append($('<option></option>').val(makes[i]).html(makes[i]));
@@ -93,7 +102,7 @@
 					// Added -1 to our dummy option to avoid trying to use it to find JSON values
 					if(selectedTxt != -1){
 						
-						var models = Object.keys(data.Years[year].Makes[selectedTxt].Models);
+						var models = Object.keys(transportationData.Years[year].Makes[selectedTxt].Models);
 						if(models.length > 0){
 							for (var i=0;i < models.length;i++)
 							{
@@ -114,7 +123,7 @@
 
 					// Added -1 to our dummy option to avoid trying to use it to find JSON values
 					if(selectedTxt != -1){
-						var transmissions = Object.keys(data.Years[year].Makes[make].Models[selectedTxt].Transmissions);
+						var transmissions = Object.keys(transportationData.Years[year].Makes[make].Models[selectedTxt].Transmissions);
 						if(transmissions.length > 0){
 							for (var i=0;i < transmissions.length;i++)
 							{
@@ -132,7 +141,7 @@
 
 					// Added -1 to our dummy option to avoid trying to use it to find JSON values
 					if(selectedTxt != -1){
-						var engines = Object.keys(data.Years[year].Makes[make].Models[model].Transmissions[selectedTxt].Engines);
+						var engines = Object.keys(transportationData.Years[year].Makes[make].Models[model].Transmissions[selectedTxt].Engines);
 						if(engines.length > 0){
 							for (var i=0;i < engines.length;i++)
 							{
@@ -150,14 +159,12 @@
 					// Added -1 to our dummy option to avoid trying to use it to find JSON values
 					if(selectedTxt != -1){
 						if(selectedTxt == "Electric"){
-							var output = data.Years[year].Makes[make].Models[model].Transmissions[transmission].Engines[selectedTxt].KwHPerMile;
-							$('input[name=car_output]').val(output*0.00220462);
-							$('label[name=carOutputLabel]').text($('input[name=car_output]').val() + " KwH/mile");
+                            fillInOutput((transportationData.Years[year].Makes[make].Models[model].Transmissions[transmission].Engines[selectedTxt].KwHPerMile/conversions.Display_Unit.kWh)*0.00220462);
 							$("#aspirationDisp").css("display", "none");
 						}else{
 							$("#aspirationDisp").removeAttr("style");
 							
-							var aspirations = Object.keys(data.Years[year].Makes[make].Models[model].Transmissions[transmission].Engines[selectedTxt].Aspirations);
+							var aspirations = Object.keys(transportationData.Years[year].Makes[make].Models[model].Transmissions[transmission].Engines[selectedTxt].Aspirations);
 							if(aspirations.length > 0){
 								for (var i=0;i < aspirations.length;i++)
 								{
@@ -171,10 +178,14 @@
 				}
 
 				function aspirationSelected(year, make, model, transmission,engine, aspiration){
-					var output = data.Years[year].Makes[make].Models[model].Transmissions[transmission].Engines[engine].Aspirations[aspiration].gCO2PerMile;
-					$('input[name=car_output]').val(output*0.00220462);
-					$('label[name=carOutputLabel]').text($('input[name=car_output]').val() + " lbs CO2/mile");
-				}
+                    fillInOutput(transportationData.Years[year].Makes[make].Models[model].Transmissions[transmission].Engines[engine].Aspirations[aspiration].gCO2PerMile*0.00220462);
+                }
+                
+                function fillInOutput(output){
+                    var val = $("select[name=conversion]").find("option:selected").val();
+					$('input[name=car_output]').val(output);
+					$('label[name=carOutputLabel]').text(output*conversions.Display_Unit[val] + " " + $("select[name=conversion]").find("option:selected").text());
+                }
 
                 $('#dispTransport').click(function(){
                     $("#transportOptions").slideToggle("slow");
@@ -199,28 +210,21 @@
 				}
 				
 
-				// Check if the user has a car saved into the database
-				if(userSettings.rows.length > 0){
-					yearSelected(userSettings.rows[0].year);
-					$("select[name=year]").val(userSettings.rows[0].year).change();
+				// Check if the user has a car saved into the transportationDatabase
+				if(userSettings.car_data.length > 0){
+					$("select[name=year]").val(userSettings.car_data[0].year).change();
+					$("select[name=make]").val(userSettings.car_data[0].make).change();
+					$("select[name=model]").val(userSettings.car_data[0].model).change();
+					$("select[name=transmission]").val(userSettings.car_data[0].transmission).change();
+					$("select[name=engine]").val(userSettings.car_data[0].engine).change();				
 
-					makeSelected(userSettings.rows[0].year, userSettings.rows[0].make);
-					$("select[name=make]").val(userSettings.rows[0].make).change();
-
-					modelSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model);
-					$("select[name=model]").val(userSettings.rows[0].model).change();
-
-					transmissionSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission);
-					$("select[name=transmission]").val(userSettings.rows[0].transmission).change();
-
-					engineSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission, userSettings.rows[0].engine);
-					$("select[name=engine]").val(userSettings.rows[0].engine).change();				
-
-					if(userSettings.rows[0].engine != "Electric"){
-						aspirationSelected(userSettings.rows[0].year, userSettings.rows[0].make, userSettings.rows[0].model, userSettings.rows[0].transmission, userSettings.rows[0].engine, userSettings.rows[0].aspiration);
-						$("select[name=aspiration]").val(userSettings.rows[0].aspiration).change();
+					if(userSettings.car_data[0].engine != "Electric"){
+						$("select[name=aspiration]").val(userSettings.car_data[0].aspiration).change();
 					}
-				}
+                }
+                if(userSettings.conversion.length > 0){
+                    $("select[name=conversion]").val(userSettings.conversion[0].conversion).change();
+                }
 
 			});
 		</script>
