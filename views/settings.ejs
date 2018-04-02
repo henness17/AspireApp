@@ -185,7 +185,7 @@
                 function fillInOutput(output){
                     var val = $("input[name=conversion_factor]").val();
 					$('input[name=car_output]').val(output);
-					$('label[name=carOutputLabel]').text(output*val + " " + $("select[name=conversion_unit]").find("option:selected").text());
+					$('label[name=carOutputLabel]').text((output*val).toFixed(2) + " " + $("select[name=conversion_unit]").find("option:selected").text());
                 }
 
                 $('#dispTransport').click(function(){
@@ -223,10 +223,9 @@
 						$("select[name=aspiration]").val(userSettings.car_data[0].aspiration).change();
 					}
 				}
-				console.log(JSON.stringify(userSettings.conversion));
-                if(userSettings.conversion.length > 0){
-                    $("select[name=conversion_unit]").val(userSettings.conversion[0].conversion_unit).change();
-                }
+        if(userSettings.conversion.length > 0){
+            $("select[name=conversion_unit]").val(userSettings.conversion[0].conversion_unit).change();
+        }
 
 			});
 		</script>

@@ -56,7 +56,7 @@
                     }
                 });
                 function updateEmissionLbl(value){
-                    $('label[name=savingsLabel]').text(value + " lbs CO2E net savings");
+                    $('label[name=savingsLabel]').text(value.toFixed(2) + " lbs CO2E net savings");
                     $('input[name=savings]').val(value);
 
                     
