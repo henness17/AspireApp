@@ -352,8 +352,7 @@
                 }
                 
                 carbonOutObj[travelmode] = carbonOut;
-                
-                if(carbonOut > carbonOutObj[carbonOutObj.worst_mode]){
+                if(parseFloat(carbonOut) > parseFloat(carbonOutObj[carbonOutObj.worst_mode])){
                     carbonOutObj.worst_mode = travelmode;
                 }
                 
