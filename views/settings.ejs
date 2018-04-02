@@ -37,12 +37,13 @@
                 var display = Object.keys(conversions.Display_Unit);
                 for (var i=0;i < display.length;i++)
                 {
-                    $("select[name=conversion]").append($('<option></option>').val(display[i]).html(display[i].split('_').join(' ')));
+                    $("select[name=conversion_unit]").append($('<option></option>').val(display[i]).html(display[i].split('_').join(' ')));
                 }
 
                 // Change functions to handle user actions of each of the select statements
-                $("select[name=conversion]").change(function(){
-                    var output = $('input[name=car_output]').val()
+                $("select[name=conversion_unit]").change(function(){
+					var output = $('input[name=car_output]').val();
+					$("input[name=conversion_factor]").val(conversions.Display_Unit[this.value]);
                     fillInOutput(output);
                 });
                 
@@ -182,9 +183,9 @@
                 }
                 
                 function fillInOutput(output){
-                    var val = $("select[name=conversion]").find("option:selected").val();
+                    var val = $("input[name=conversion_factor]").val();
 					$('input[name=car_output]').val(output);
-					$('label[name=carOutputLabel]').text(output*conversions.Display_Unit[val] + " " + $("select[name=conversion]").find("option:selected").text());
+					$('label[name=carOutputLabel]').text(output*val + " " + $("select[name=conversion_unit]").find("option:selected").text());
                 }
 
                 $('#dispTransport').click(function(){
@@ -223,7 +224,7 @@
 					}
                 }
                 if(userSettings.conversion.length > 0){
-                    $("select[name=conversion]").val(userSettings.conversion[0].conversion).change();
+                    $("select[name=conversion_unit]").val(userSettings.conversion[0].conversion).change();
                 }
 
 			});
@@ -239,8 +240,10 @@
                 <center>
                     <div class="form-group box">
                         <center><label class="control-label" for="conversion_id" >Conversion</label></center><br>
-                        <select class="form-control" id="conversion_id" name="conversion" form="settingsform" style="width:100%"></select><br>
-                    </div>
+                        <select class="form-control" id="conversion_id" name="conversion_unit" form="settingsform" style="width:100%"></select><br>
+						<input class="form-control" type="text" Readonly="readonly" style="display:none" name="conversion_factor" form="settingsform">
+                        
+						</div>
                     <div class="form-group box">
                         <center><i class='glyphicon glyphicon-menu-right' id="dispTransport"></i><label class="control-label" for="transportation_id">Transportation</label></center><br>
                         

@@ -77,7 +77,7 @@ module.exports = function(app){
   var GetUserSettingsBySocialId = function GetUserSettingsBySocialId(socialId, callback){
     pg.connect(connect, function(err, client, done){
       client.query("SELECT aspiration, car_output, engine, make, model, transmission, year FROM public.user_transportation_settings WHERE social_id=$1", [socialId], function(err, result){
-        client.query("SELECT conversion FROM public.user WHERE social_id=$1", [socialId], function(err, result2){
+        client.query("SELECT conversion_unit, conversion_factor FROM public.user WHERE social_id=$1", [socialId], function(err, result2){
             done();
             if(result.rows.length == 0){
                 callback(null);
@@ -169,9 +169,10 @@ module.exports = function(app){
              formResults.aspiration,
              formResults.car_output,
              socialId], function(err, result){
-                client.query("UPDATE public.user SET conversion=$1" +
-                " WHERE social_id=$2",
-                    [formResults.conversion,
+                client.query("UPDATE public.user SET conversion_unit=$1, conversion_factor=$2" +
+                " WHERE social_id=$3",
+                    [formResults.conversion_unit,
+                      formResults.conversion_factor,
                     socialId], function(err, result){
                         done();
 
