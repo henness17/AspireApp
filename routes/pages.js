@@ -84,8 +84,34 @@ module.exports = function(app) {
   app.post("/post-user-foodrecycle", function(req, res) {
     console.log(JSON.stringify(req.body));
     postgres.PostUserFoodRecycle(req.user.id, req.body, callback);
-    function callback() {
-      res.redirect("/");
+    function callback(formResults) {
+      var stream = require("getstream");
+        // Instantiate a new client (server side)
+        client = stream.connect(
+          process.env.STREAM_ID,
+          process.env.STREAM_SECRET,
+          process.env.STREAM_APP
+        );
+        var userName = String(req.user.id);
+        var user = client.feed("user", userName);
+        // User follows everyone
+        var userTimeline = client.feed("timeline", userName);
+        postgres.GetUserBySocialId(req.user.id, callback);
+        function callback(userResults){
+          userResults = userResults.rows[0];
+          var userSavings = formResults.savings * userResults.conversion_factor;
+          var userUnit = userResults.conversion_unit;
+          console.log(JSON.stringify(userResults) + "\n\n\n\n\n\n\n");
+          userUnit = userUnit.split("_").join(" ");
+          user.addActivity({
+            actor: req.user.displayName,
+            verb: "add",
+            object: "picture:10",
+            foreign_id: "picture:10",
+            message: "I saved " + userSavings.toFixed(2) + " " + userUnit + " while handling waste!"
+          });
+        res.redirect("/");
+      }
     }
   });
 
@@ -100,31 +126,31 @@ module.exports = function(app) {
     postgres.PostUserTransportation(req.user.id, req.body, callback);
     function callback(formResults) {
       var stream = require("getstream");
-      // Instantiate a new client (server side)
-      client = stream.connect(
-        process.env.STREAM_ID,
-        process.env.STREAM_SECRET,
-        process.env.STREAM_APP
-      );
-      var userName = String(req.user.id);
-      var user = client.feed("user", userName);
-      // User follows everyone
-      var userTimeline = client.feed("timeline", userName);
-      postgres.GetUserBySocialId(req.user.id, callback);
-      function callback(userResults){
-        userResults = userResults.rows[0];
-        var userSavings = formResults.saved * userResults.conversion_factor;
-        var userUnit = userResults.conversion_unit;
-        console.log(JSON.stringify(userResults) + "\n\n\n\n\n\n\n");
-        userUnit = userUnit.split("_").join(" ");
-        user.addActivity({
-          actor: req.user.displayName,
-          verb: "add",
-          object: "picture:10",
-          foreign_id: "picture:10",
-          message: "I saved " + userSavings.toFixed(2) + " " + userUnit + " while using transportation!"
-        });
-      res.redirect("/");
+        // Instantiate a new client (server side)
+        client = stream.connect(
+          process.env.STREAM_ID,
+          process.env.STREAM_SECRET,
+          process.env.STREAM_APP
+        );
+        var userName = String(req.user.id);
+        var user = client.feed("user", userName);
+        // User follows everyone
+        var userTimeline = client.feed("timeline", userName);
+        postgres.GetUserBySocialId(req.user.id, callback);
+        function callback(userResults){
+          userResults = userResults.rows[0];
+          var userSavings = formResults.saved * userResults.conversion_factor;
+          var userUnit = userResults.conversion_unit;
+          console.log(JSON.stringify(userResults) + "\n\n\n\n\n\n\n");
+          userUnit = userUnit.split("_").join(" ");
+          user.addActivity({
+            actor: req.user.displayName,
+            verb: "add",
+            object: "picture:10",
+            foreign_id: "picture:10",
+            message: "I saved " + userSavings.toFixed(2) + " " + userUnit + " while using transportation!"
+          });
+        res.redirect("/");
       }
     }
   });

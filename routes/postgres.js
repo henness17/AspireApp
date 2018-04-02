@@ -134,7 +134,7 @@ module.exports = function(app){
         formResults.quantity,
         formResults.savings], function(err, result){
           done();
-          callback();
+          callback(formResults);
       });
 
       client.query("UPDATE public.user SET " +
