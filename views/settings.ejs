@@ -222,9 +222,10 @@
 					if(userSettings.car_data[0].engine != "Electric"){
 						$("select[name=aspiration]").val(userSettings.car_data[0].aspiration).change();
 					}
-                }
+				}
+				console.log(JSON.stringify(userSettings.conversion));
                 if(userSettings.conversion.length > 0){
-                    $("select[name=conversion_unit]").val(userSettings.conversion[0].conversion).change();
+                    $("select[name=conversion_unit]").val(userSettings.conversion[0].conversion_unit).change();
                 }
 
 			});
