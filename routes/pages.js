@@ -12,17 +12,16 @@ module.exports = function(app) {
     console.log("After follow all users");
     function callback(stream) {
         console.log("Before get savings");
-        postgres.GetUserSavingsById(req.user.id, callback2);
+        postgres.GetUserBySocialId(req.user.id, callback2);
 
         console.log("After get savings");
-        function callback2(savings) {
+        function callback2(user) {
             
             var conversion = fs.readFileSync("data/conversions.json");
             res.render("home", {
                 user: req.user,
                 stream: stream,
-                savings: savings,
-                conversion: conversion
+                userData: user.rows[0]
             });
         }
     }
@@ -111,14 +110,22 @@ module.exports = function(app) {
       var user = client.feed("user", userName);
       // User follows everyone
       var userTimeline = client.feed("timeline", userName);
-      user.addActivity({
-        actor: req.user.displayName,
-        verb: "add",
-        object: "picture:10",
-        foreign_id: "picture:10",
-        message: "I saved " + formResults.saved + " while using transportation!"
-      });
+      postgres.GetUserBySocialId(req.user.id, callback);
+      function callback(userResults){
+        userResults = userResults.rows[0];
+        var userSavings = formResults.saved * userResults.conversion_factor;
+        var userUnit = userResults.conversion_unit;
+        console.log(JSON.stringify(userResults) + "\n\n\n\n\n\n\n");
+        userUnit = userUnit.split("_").join(" ");
+        user.addActivity({
+          actor: req.user.displayName,
+          verb: "add",
+          object: "picture:10",
+          foreign_id: "picture:10",
+          message: "I saved " + userSavings.toFixed(2) + " " + userUnit + " while using transportation!"
+        });
       res.redirect("/");
+      }
     }
   });
 

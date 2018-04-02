@@ -24,8 +24,8 @@
             <hr>
             <p>
                 <div class="progress">
-                    <% var progress = (savings.total_savings/10 - Math.floor(savings.total_savings/10)) * 100 %>
-                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">Level <%= Math.floor(savings.total_savings / 10) %></div>
+                    <% var progress = (userData.total_savings/10 - Math.floor(userData.total_savings/10)) * 100 %>
+                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">Level <%= Math.floor(userData.total_savings / 10) %></div>
                 </div>
             </p>
             <p>
@@ -41,7 +41,7 @@
                 </div>
             </p>
             <p>
-                You've saved <%= savings.total_savings %> pounds of carbon dioxide!
+                You've saved <%= (userData.total_savings * userData.conversion_factor).toFixed(2) %> <%= userData.conversion_unit.split("_").join(" ") %> 
             </p>
         </div>
     </div>
@@ -89,16 +89,16 @@
 </body>
     <script type="text/javascript">
         $(document).ready(function() {
-            var savings = <%- JSON.stringify(savings); %>
-            var percentage = (savings.transportation_savings / savings.total_savings) * 100;
+            var userData = <%- JSON.stringify(userData); %>
+            var percentage = (userData.transportation_savings / userData.total_savings) * 100;
             $("#transport").html("Transportation ("+Math.floor(percentage)+"%)");
             $("#transport").css("width", percentage+"%");
             
-            percentage = (savings.food_recycle_savings / savings.total_savings) * 100;
+            percentage = (userData.food_recycle_savings / userData.total_savings) * 100;
             $("#foodrecycle").html("Food/Recycle ("+Math.floor(percentage)+"%)");
             $("#foodrecycle").css("width", percentage+"%");
 
-            percentage = (savings.housing_savings / savings.total_savings) * 100;
+            percentage = (userData.housing_savings / userData.total_savings) * 100;
             $("#housing").html("Housing ("+Math.floor(percentage)+"%)");
             $("#housing").css("width", percentage+"%");
 
