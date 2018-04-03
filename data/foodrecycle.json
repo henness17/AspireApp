@@ -11,72 +11,72 @@
         },
         "Glass_Bottle": {
             "Waste_Method": {
-                "Recycled": "0.009308541",
+                "Recycled": "0.115676314",
                 "Landfilled":"0",
-                "Source_Reduced": "0.019946874"
+                "Source_Reduced": "0.247877817"
             },
             "Type": "RECYCLE"
         },
         "Magazine": {
             "Waste_Method": {
-                "Recycled": "0.102061504",
-                "Landfilled": "0.012965468",
-                "Source_Reduced": "0.28590519"
+                "Recycled": "6.7681834",
+                "Landfilled": "0.8598018",
+                "Source_Reduced": "18.959732"
             },
             "Type": "RECYCLE"
         },
         "Newspaper": {
             "Waste_Method": {
-                "Recycled": "0.091423171",
-                "Landfilled": "0.027260727",
-                "Source_Reduced": "0.158577646"
+                "Recycled": "9.0940575",
+                "Landfilled": "2.7116826",
+                "Source_Reduced": "15.7740561"
             },
             "Type": "RECYCLE"
         },
         "Yard_Trimmings": {
             "Waste_Method": {
-                "Landfilled": "0.005984062",
-                "Composted": "0.004986718"
+                "Landfilled": "1.984158",
+                "Composted": "1.653465"
             },
             "Type": "RECYCLE"
         },
         "Beef_Patty": {
             "Waste_Method": {
                 "Landfilled":"0",
-                "Composted": "0.005984062",
-                "Source_Reduced": "0.999005925"
+                "Composted": "0.0992079",
+                "Source_Reduced": "16.56220775"
             },
             "Type": "FOOD"
         },
         "Chicken_Wing": {
             "Waste_Method": {
                 "Landfilled":"0",
-                "Composted": "0.005984062",
-                "Source_Reduced": "0.08211463"
+                "Composted": "0.038931398",
+                "Source_Reduced": "0.534225298"
             },
             "Type": "FOOD"
         },
         "Bread_Slice": {
             "Waste_Method": {
                 "Landfilled":"0",
-                "Composted": "0.005984062",
-                "Source_Reduced": "0.022274009"
+                "Composted": "0.010935786",
+                "Source_Reduced": "0.040705426"
             },
             "Type": "FOOD"
         },
         "Single_Fruit": {
             "Waste_Method": {
                 "Landfilled":"0",
-                "Composted": "0.005984062",
-                "Source_Reduced": "0.014627707"
+                "Composted": "0.043743144",
+                "Source_Reduced": "0.106927686"
             },
             "Type": "FOOD"
         },
         "Single_Vegetable": {
             "Waste_Method": {
                 "Landfilled":"0",
-                "Composted": "0.005984062",
-                "Source_Reduced": "0.014627707"
+                "Composted": "0.0992079",
+                "Source_Reduced": "0.2425082"
             },
             "Type": "FOOD"
         }
