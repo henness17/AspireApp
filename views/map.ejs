@@ -307,17 +307,17 @@
                 }
                 var carbonOutObj = {worst_mode:"DRIVING"};
                 function populatePopup(response, travelmode) {
-                var costPerMile, fare, time, money, distance, distMeters, carbonOut;
+                var dollarsperpoundCO2, fare, time, money, distance, distMeters, carbonOut;
                 var milesPerMeter = 0.000621371;
-                costPerMile = 0.54;
+                dollarsperpoundCO2 = 0.1545;
 
                 time = response[0].legs[0].duration.text;
                 distance = response[0].legs[0].distance.text;
                 distMeters = response[0].legs[0].distance.value;
                 switch(travelmode) {
                     case google.maps.TravelMode.DRIVING:
-                        money = parseFloat(response[0].legs[0].distance.value * milesPerMeter * costPerMile).toFixed(2);
                         carbonOut = ((distMeters * milesPerMeter) * carOutput).toFixed(2);
+                        money = parseFloat(distMeters * milesPerMeter * dollarsperpoundCO2 * carbonOut).toFixed(2);
 
                         document.getElementById("cost_driving_time").innerHTML = time;
                         document.getElementById("cost_driving_money").innerHTML = "$" + money;
