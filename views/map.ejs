@@ -315,8 +315,8 @@
                 distance = response[0].legs[0].distance.text;
                 distMeters = response[0].legs[0].distance.value;
                 switch(travelmode) {
-                    case google.maps.TravelMode.DRIVING:
-                        money = parseFloat(distMeters * milesPerMeter * dollarsPerPoundCO2 * carbonOut).toFixed(2);
+                    case google.maps.TravelMode.DRIVING:    
+                    money = parseFloat(distMeters * milesPerMeter * dollarsPerPoundCO2 * carOutput).toFixed(2);
                         carbonOut = ((distMeters * milesPerMeter) * carOutput).toFixed(2);
 
                         document.getElementById("cost_driving_time").innerHTML = time;
