@@ -14,6 +14,10 @@ Application Structure
 > Structure and purpose of our Node application components
 
     .
+    ├── data # Mechanical Engineering static data
+    │   ├── conversions.js # Relatable conversions
+    │   ├── foodrecycle.js # Food and recycle conversion table
+    │   ├── transportation.js # Transportation Conversion table
     ├── routes              # Determines how an application responds to a client request
     │   ├── pages.js            # General application routes, such as the index 
     │	├── passport.js         # Connects to Passport, which enables Facebook authentication   
