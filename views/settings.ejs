@@ -26,14 +26,19 @@
 				// to convert the select lists to searchable drop down lists
 				$('select').select2();
 
+                // Append years to the select list to allow user to select a year
 				for (var i=1998;i<=2018;i++) {
 					$("select[name=year]").append($('<option></option>').val(i).html(i));
 				}
 
-				var transportationData = <%- transportationJson; %>
+                // Grab Mechanical Engineers calculations and information regarding cars
+                var transportationData = <%- transportationJson; %>
+                // Grab user settings that have been saved to prepopulate fields
                 var userSettings = <%- JSON.stringify(userSettingsJson); %>
+                // Grab Mechanical Engineers calculations and information regarding conversions
                 var conversions = <%- conversionJson; %>
 
+                // Get the list of display units that the user could select from and append each as an option that the user can select
                 var display = Object.keys(conversions.Display_Unit);
                 for (var i=0;i < display.length;i++)
                 {
@@ -44,6 +49,7 @@
                 $("select[name=conversion_unit]").change(function(){
 					var output = $('input[name=car_output]').val();
 					$("input[name=conversion_factor]").val(conversions.Display_Unit[this.value]);
+                    // Updates car output display
                     fillInOutput(output);
                 });
                 
@@ -83,6 +89,7 @@
 
 					// Added -1 to our dummy option to avoid trying to use it to find JSON values
 					if(selectedTxt != -1){
+                        // Get the list of makes listed in the transportation json file and add each to the next select list as an option for the user to select
 						var makes = Object.keys(transportationData.Years[selectedTxt].Makes);
 						if(makes.length > 0){
 							for (var i=0;i < makes.length;i++) {
@@ -102,7 +109,7 @@
 					$("select[name=aspiration] option").remove();
 					// Added -1 to our dummy option to avoid trying to use it to find JSON values
 					if(selectedTxt != -1){
-						
+						// Get the list of models listed in the transportation json file and add each to the next select list as an option for the user to select
 						var models = Object.keys(transportationData.Years[year].Makes[selectedTxt].Models);
 						if(models.length > 0){
 							for (var i=0;i < models.length;i++)
@@ -124,7 +131,8 @@
 
 					// Added -1 to our dummy option to avoid trying to use it to find JSON values
 					if(selectedTxt != -1){
-						var transmissions = Object.keys(transportationData.Years[year].Makes[make].Models[selectedTxt].Transmissions);
+                        // Get the list of transmissions listed in the transportation json file and add each to the next select list as an option for the user to select    
+                        var transmissions = Object.keys(transportationData.Years[year].Makes[make].Models[selectedTxt].Transmissions);
 						if(transmissions.length > 0){
 							for (var i=0;i < transmissions.length;i++)
 							{
@@ -142,7 +150,8 @@
 
 					// Added -1 to our dummy option to avoid trying to use it to find JSON values
 					if(selectedTxt != -1){
-						var engines = Object.keys(transportationData.Years[year].Makes[make].Models[model].Transmissions[selectedTxt].Engines);
+                        // Get the list of engines listed in the transportation json file and add each to the next select list as an option for the user to select                        
+                        var engines = Object.keys(transportationData.Years[year].Makes[make].Models[model].Transmissions[selectedTxt].Engines);
 						if(engines.length > 0){
 							for (var i=0;i < engines.length;i++)
 							{

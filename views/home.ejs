@@ -89,7 +89,9 @@
 </body>
     <script type="text/javascript">
         $(document).ready(function() {
+            // Grab user settings data from backend
             var userData = <%- JSON.stringify(userData); %>
+            // Fill in the percentage bar
             var percentage = (userData.transportation_savings / userData.total_savings) * 100;
             $("#transport").html("Transportation ("+Math.floor(percentage)+"%)");
             $("#transport").css("width", percentage+"%");

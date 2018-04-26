@@ -9,40 +9,62 @@
                 // Currently selects each of the elements with the filterSelect class name and uses jquery plug in Select2
                 // to convert the select lists to searchable drop down lists
                 $('select').select2();
+                // Grabs our Mechanical Engineering calculations and the relevant options that the user can select from
                 var data = <%- JSON.stringify(foodrecycleJson); %>
+                // Grabs the latest option data for the user to select and prepopulate fields
                 var recents = <%- JSON.stringify(recents);%>
                 recents = JSON.parse(recents);
                 
+                // Grabs the list of materials for the user to select from
                 var materials = Object.keys(data.Materials);
 
+                // Appends each material to the select list to allow a user to select the option
                 for (var i=0;i < materials.length;i++)
                 {
                     $("select[name=material]").append($('<option></option>').val(materials[i]).html(materials[i].replace("_"," ")));
                 }
                 
+                // Methods to handle when user changes a value in either select list
                 $("select[name=material]").change(function(){
                     Material($(this).find("option:selected").val());
                 });
                 $("select[name=waste_method]").change(function(){
                     WasteMethodSelected($("select[name=material]").find("option:selected").val(), $(this).find("option:selected").val());
                 });
+                $("input[name=option]").change(function(){
+                    $("#RecentList option").not(':first').remove();
+                    
+                    recents[$(this).val()].forEach(function(element, index) {
+                        var option = element.material.replace("_"," ") + ", " + element.waste_method;
+                        $("#RecentList").append($("<option/>", {
+                            value: index,
+                            text: option
+                        }));
+                    });
+                    
+                });
+
                 function Material(selectedTxt){
                     // Remove all options in the rest of the select lists
                     $("select[name=waste_method] option").remove();
                     // Added -1 to our dummy option to avoid trying to use it to find JSON values
                     if(selectedTxt != -1){
+                        // Grabs relevant waste methods depending on a material and prepopulates the Waste Method select list
                         var waste_methods = Object.keys(data.Materials[selectedTxt].Waste_Method);
                         for (var i=0;i < waste_methods.length;i++)
                         {
                             $("select[name=waste_method]").append($('<option></option>').val(waste_methods[i]).html(waste_methods[i].replace("_"," ")));
                         }
+
                         $('input[name=type]').val(data.Materials[selectedTxt].Type);
                         WasteMethodSelected(selectedTxt, waste_methods[0]);
                     }
                 }
                 function WasteMethodSelected(MaterialTxt, selectedTxt){
                     var constant = data.Materials[MaterialTxt].Waste_Method[selectedTxt];
+                    // Checks if the user entered the quantity to calculate the emissions saved
                     if($("input[name=quantity]").val() > 0){
+                        // Updates the emissions output label to display how much the user could save 
                         updateEmissionLbl(constant*$("input[name=quantity]").val());
                     }
                 }
@@ -64,21 +86,11 @@
     
                 $( ".foodrecycle" ).addClass( "active" );
                 
-                $("input[name=option]").change(function(){
-                    $("#RecentList option").not(':first').remove();
-                    
-                    recents[$(this).val()].forEach(function(element, index) {
-                        var option = element.material.replace("_"," ") + ", " + element.waste_method;
-                        $("#RecentList").append($("<option/>", {
-                            value: index,
-                            text: option
-                        }));
-                    });
-                    
-                });
-
+                
+                // Runs this function if the user clicks and changes the autofill list
                 $("#RecentList").change(function(){
                     var index = $(this).val();
+                    // Checks if user selected an option to autofill certain fields on the food recycle page
                     if(index != -1){
                         var option = $('input[name=option]:checked').val();
                         $("select[name=material]").val(recents[option][index].material).change();
